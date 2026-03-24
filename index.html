@@ -1,0 +1,1788 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lihe 的个人空间</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-green: #00ff88;
+            --neon-purple: #8800ff;
+            --bg-dark: #0a0a0f;
+            --bg-card: rgba(255, 255, 255, 0.05);
+            --bg-card-hover: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --border-glass: rgba(255, 255, 255, 0.1);
+            --shadow-glow: 0 0 30px rgba(0, 255, 136, 0.2);
+            --cat-suiyi: #00ff88;
+            --cat-sikao: #8800ff;
+            --cat-aihao: #ff8800;
+            --cat-jishu: #00aaff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(136, 0, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(0, 255, 136, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(0, 170, 255, 0.05) 0%, transparent 70%);
+            animation: bgPulse 8s ease-in-out infinite;
+        }
+
+        @keyframes bgPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: var(--neon-green);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 15s infinite ease-in-out;
+        }
+
+        .particle:nth-child(2n) { background: var(--neon-purple); }
+        .particle:nth-child(3n) { animation-duration: 20s; }
+        .particle:nth-child(4n) { animation-duration: 25s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0.3; }
+            25% { transform: translateY(-100px) translateX(50px); opacity: 0.6; }
+            50% { transform: translateY(-200px) translateX(-30px); opacity: 0.3; }
+            75% { transform: translateY(-100px) translateX(70px); opacity: 0.5; }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 1rem 2rem;
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-glass);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--neon-green), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 0.75rem 1.25rem;
+            border-radius: 12px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--neon-green), var(--neon-purple));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            border-radius: 12px;
+            z-index: -1;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+
+        .nav-links a:hover::before {
+            opacity: 0.15;
+        }
+
+        .nav-links a.active {
+            color: var(--neon-green);
+            text-shadow: 0 0 20px var(--neon-green);
+        }
+
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 3px;
+            background: var(--neon-green);
+            border-radius: 2px;
+            box-shadow: 0 0 10px var(--neon-green);
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 2px;
+            background: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        /* Main Content */
+        main {
+            padding-top: 80px;
+            min-height: 100vh;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.4s ease;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Home Page */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(4rem, 15vw, 10rem);
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--neon-green) 0%, var(--neon-purple) 50%, var(--neon-green) 100%);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 5s ease infinite;
+            text-shadow: 0 0 60px rgba(0, 255, 136, 0.5);
+            position: relative;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.2rem, 4vw, 2rem);
+            color: var(--text-secondary);
+            margin-top: 1rem;
+            letter-spacing: 0.5em;
+            animation: subtitleGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes subtitleGlow {
+            0%, 100% { text-shadow: 0 0 10px rgba(136, 0, 255, 0.3); }
+            50% { text-shadow: 0 0 20px rgba(136, 0, 255, 0.6); }
+        }
+
+        .hero-tagline {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            margin-top: 2rem;
+            padding: 1rem 2rem;
+            background: var(--bg-card);
+            border-radius: 50px;
+            border: 1px solid var(--border-glass);
+            backdrop-filter: blur(10px);
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 3rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--neon-green);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        .floating-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .float-item {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0.2;
+            animation: floatAround 10s infinite ease-in-out;
+        }
+
+        .float-item:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+        .float-item:nth-child(2) { top: 20%; right: 15%; animation-delay: -2s; }
+        .float-item:nth-child(3) { bottom: 30%; left: 8%; animation-delay: -4s; }
+        .float-item:nth-child(4) { bottom: 15%; right: 10%; animation-delay: -6s; }
+        .float-item:nth-child(5) { top: 50%; left: 5%; animation-delay: -8s; }
+
+        @keyframes floatAround {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-20px) rotate(5deg); }
+            50% { transform: translateY(0) rotate(0deg); }
+            75% { transform: translateY(20px) rotate(-5deg); }
+        }
+
+        /* Glass Card */
+        .glass-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            background: var(--bg-card-hover);
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-glow);
+        }
+
+        /* Notes Page */
+        .notes-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .notes-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+        }
+
+        .notes-search {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .search-input {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            color: var(--text-primary);
+            font-size: 1rem;
+            width: 250px;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--neon-green);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
+        }
+
+        .notes-form {
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .form-textarea {
+            width: 100%;
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            padding: 1rem;
+            color: var(--text-primary);
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 120px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--neon-green);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .form-select, .form-input {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-select:focus, .form-input:focus {
+            outline: none;
+            border-color: var(--neon-green);
+        }
+
+        .form-select option {
+            background: var(--bg-dark);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--neon-green), #00cc6a);
+            border: none;
+            border-radius: 12px;
+            padding: 0.75rem 1.5rem;
+            color: var(--bg-dark);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-card-hover);
+            box-shadow: 0 0 20px rgba(136, 0, 255, 0.2);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff4444, #cc0000);
+            color: white;
+        }
+
+        .char-count {
+            text-align: right;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+
+        .notes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .note-card {
+            position: relative;
+            animation: noteAppear 0.4s ease;
+        }
+
+        @keyframes noteAppear {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .note-category {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 0.75rem;
+        }
+
+        .note-category.suiyi { background: rgba(0, 255, 136, 0.2); color: var(--cat-suiyi); }
+        .note-category.sikao { background: rgba(136, 0, 255, 0.2); color: var(--cat-sikao); }
+        .note-category.aihao { background: rgba(255, 136, 0, 0.2); color: var(--cat-aihao); }
+        .note-category.jishu { background: rgba(0, 170, 255, 0.2); color: var(--cat-jishu); }
+
+        .note-content {
+            color: var(--text-primary);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .note-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .note-tag {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.2rem 0.6rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .note-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-glass);
+        }
+
+        .note-time {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .note-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .note-actions button {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .note-actions button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+
+        .note-actions button.delete:hover {
+            color: #ff4444;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state-text {
+            font-size: 1.2rem;
+        }
+
+        .filter-btns {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: 20px;
+            padding: 0.5rem 1rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: rgba(0, 255, 136, 0.2);
+            border-color: var(--neon-green);
+            color: var(--neon-green);
+        }
+
+        /* Games Page */
+        .games-header {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .game-card {
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .game-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .game-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .game-desc {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .coming-soon {
+            opacity: 0.5;
+        }
+
+        /* Tools Page */
+        .tools-header {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .tool-card {
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .tool-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .tool-title {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tool-desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--bg-dark);
+            border: 1px solid var(--border-glass);
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: modalSlide 0.3s ease;
+        }
+
+        @keyframes modalSlide {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+
+        .modal-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Calculator */
+        .calculator {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem;
+        }
+
+        .calc-display {
+            grid-column: span 4;
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: right;
+            font-size: 1.5rem;
+            font-family: 'Orbitron', sans-serif;
+            margin-bottom: 0.5rem;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            word-break: break-all;
+        }
+
+        .calc-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            padding: 1rem;
+            font-size: 1.25rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .calc-btn:hover {
+            background: var(--bg-card-hover);
+            transform: scale(1.05);
+        }
+
+        .calc-btn:active {
+            transform: scale(0.95);
+            background: rgba(0, 255, 136, 0.2);
+        }
+
+        .calc-btn.operator {
+            color: var(--neon-green);
+            font-weight: 600;
+        }
+
+        .calc-btn.equals {
+            background: linear-gradient(135deg, var(--neon-green), #00cc6a);
+            color: var(--bg-dark);
+            font-weight: 700;
+        }
+
+        .calc-btn.clear {
+            color: #ff4444;
+        }
+
+        /* Random Picker */
+        .picker-input {
+            width: 100%;
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            padding: 1rem;
+            color: var(--text-primary);
+            font-size: 1rem;
+            min-height: 100px;
+            resize: vertical;
+            margin-bottom: 1rem;
+        }
+
+        .picker-input:focus {
+            outline: none;
+            border-color: var(--neon-purple);
+        }
+
+        .picker-result {
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-green));
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            margin: 1.5rem 0;
+            animation: resultReveal 0.5s ease;
+            display: none;
+        }
+
+        .picker-result.show {
+            display: block;
+        }
+
+        @keyframes resultReveal {
+            from { transform: scale(0.5); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .picker-result-text {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        /* Countdown Timer */
+        .countdown-display {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            text-align: center;
+            padding: 2rem;
+            background: var(--bg-card);
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-glass);
+        }
+
+        .countdown-inputs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .countdown-input-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .countdown-input-group label {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .countdown-input-group input {
+            width: 80px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: 8px;
+            padding: 0.75rem;
+            color: var(--text-primary);
+            font-size: 1.25rem;
+            text-align: center;
+        }
+
+        .countdown-input-group input:focus {
+            outline: none;
+            border-color: var(--neon-green);
+        }
+
+        .countdown-btns {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        /* About Page */
+        .about-header {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .about-section {
+            margin-bottom: 2rem;
+        }
+
+        .about-section h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--neon-green);
+        }
+
+        .about-section p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .tech-tag {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .changelog {
+            list-style: none;
+        }
+
+        .changelog li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-glass);
+            color: var(--text-secondary);
+        }
+
+        .changelog li:last-child {
+            border-bottom: none;
+        }
+
+        .changelog .version {
+            color: var(--neon-purple);
+            font-weight: 600;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background: rgba(10, 10, 15, 0.95);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                padding: 1rem;
+                gap: 0.5rem;
+                transform: translateY(-100%);
+                opacity: 0;
+                transition: all 0.3s ease;
+            }
+
+            .nav-links.active {
+                transform: translateY(0);
+                opacity: 1;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .hamburger.active span:nth-child(1) {
+                transform: rotate(45deg) translate(5px, 5px);
+            }
+
+            .hamburger.active span:nth-child(2) {
+                opacity: 0;
+            }
+
+            .hamburger.active span:nth-child(3) {
+                transform: rotate(-45deg) translate(5px, -5px);
+            }
+
+            .hero-stats {
+                gap: 1.5rem;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+
+            .notes-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .notes-search {
+                width: 100%;
+            }
+
+            .search-input {
+                width: 100%;
+            }
+
+            .form-row {
+                flex-direction: column;
+            }
+
+            .page {
+                padding: 1rem;
+            }
+
+            .countdown-display {
+                font-size: 2rem;
+            }
+        }
+
+        /* Sound feedback */
+        .sound-enabled * {
+            -webkit-tap-highlight-color: transparent;
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-animation">
+        <div class="particles">
+            <div class="particle" style="top: 10%; left: 20%;"></div>
+            <div class="particle" style="top: 30%; left: 60%;"></div>
+            <div class="particle" style="top: 50%; left: 30%;"></div>
+            <div class="particle" style="top: 70%; left: 80%;"></div>
+            <div class="particle" style="top: 20%; left: 90%;"></div>
+            <div class="particle" style="top: 80%; left: 10%;"></div>
+            <div class="particle" style="top: 40%; left: 70%;"></div>
+            <div class="particle" style="top: 60%; left: 40%;"></div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-logo">Lihe</div>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#home" class="active" data-page="home">首页</a></li>
+            <li><a href="#notes" data-page="notes">随笔</a></li>
+            <li><a href="#games" data-page="games">游戏</a></li>
+            <li><a href="#tools" data-page="tools">工具</a></li>
+            <li><a href="#about" data-page="about">关于</a></li>
+        </ul>
+        <div class="hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Home Page -->
+        <div class="page active" id="page-home">
+            <div class="hero">
+                <div class="floating-elements">
+                    <span class="float-item">💡</span>
+                    <span class="float-item">🚀</span>
+                    <span class="float-item">✨</span>
+                    <span class="float-item">🎯</span>
+                    <span class="float-item">🌟</span>
+                </div>
+                <h1 class="hero-name">Lihe</h1>
+                <p class="hero-subtitle">创作者 · 思考者 · 开发者</p>
+                <p class="hero-tagline">记录思考，分享热爱</p>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <div class="stat-number" id="stat-notes">0</div>
+                        <div class="stat-label">随笔</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="stat-games">1</div>
+                        <div class="stat-label">游戏</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="stat-tools">3</div>
+                        <div class="stat-label">工具</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notes Page -->
+        <div class="page" id="page-notes">
+            <div class="notes-header">
+                <h2 class="notes-title">随笔</h2>
+                <div class="notes-search">
+                    <input type="text" class="search-input" placeholder="搜索随笔..." id="searchNotes">
+                </div>
+            </div>
+
+            <div class="filter-btns" id="filterBtns">
+                <button class="filter-btn active" data-filter="all">全部</button>
+                <button class="filter-btn" data-filter="随笔">随笔</button>
+                <button class="filter-btn" data-filter="思考">思考</button>
+                <button class="filter-btn" data-filter="爱好">爱好</button>
+                <button class="filter-btn" data-filter="技术">技术</button>
+            </div>
+
+            <div class="glass-card notes-form">
+                <div class="form-group">
+                    <label class="form-label">写下你的想法</label>
+                    <textarea class="form-textarea" id="noteContent" placeholder="在这里写下你的随笔..." maxlength="2000"></textarea>
+                    <div class="char-count"><span id="charCount">0</span> / 2000</div>
+                </div>
+                <div class="form-row">
+                    <select class="form-select" id="noteCategory">
+                        <option value="随笔">随笔</option>
+                        <option value="思考">思考</option>
+                        <option value="爱好">爱好</option>
+                        <option value="技术">技术</option>
+                    </select>
+                    <input type="text" class="form-input" id="noteTags" placeholder="标签 (用逗号分隔)" style="flex: 1;">
+                    <button class="btn" id="addNoteBtn">发布随笔</button>
+                </div>
+            </div>
+
+            <div class="notes-grid" id="notesGrid">
+                <!-- Notes will be rendered here -->
+            </div>
+        </div>
+
+        <!-- Games Page -->
+        <div class="page" id="page-games">
+            <h2 class="games-header">游戏</h2>
+            <div class="games-grid">
+                <div class="glass-card game-card" onclick="openGameModal()">
+                    <div class="game-icon">🐢</div>
+                    <h3 class="game-title">忍者神龟</h3>
+                    <p class="game-desc">经典街机游戏 - 忍者神龟</p>
+                    <button class="btn">开始游戏</button>
+                </div>
+                <div class="glass-card game-card coming-soon">
+                    <div class="game-icon">🎮</div>
+                    <h3 class="game-title">更多游戏</h3>
+                    <p class="game-desc">更多游戏开发中...</p>
+                    <button class="btn btn-secondary" disabled>敬请期待</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tools Page -->
+        <div class="page" id="page-tools">
+            <h2 class="tools-header">工具</h2>
+            <div class="tools-grid">
+                <div class="glass-card tool-card" onclick="openModal('calculator')">
+                    <div class="tool-icon">🧮</div>
+                    <h3 class="tool-title">计算器</h3>
+                    <p class="tool-desc">简单实用的计算器</p>
+                </div>
+                <div class="glass-card tool-card" onclick="openModal('countdown')">
+                    <div class="tool-icon">⏱️</div>
+                    <h3 class="tool-title">倒计时</h3>
+                    <p class="tool-desc">设置倒计时提醒</p>
+                </div>
+                <div class="glass-card tool-card" onclick="openModal('picker')">
+                    <div class="tool-icon">🎲</div>
+                    <h3 class="tool-title">随机决定器</h3>
+                    <p class="tool-desc">帮你做出选择</p>
+                </div>
+                <div class="glass-card tool-card coming-soon">
+                    <div class="tool-icon">🔧</div>
+                    <h3 class="tool-title">更多工具</h3>
+                    <p class="tool-desc">更多工具开发中...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- About Page -->
+        <div class="page" id="page-about">
+            <h2 class="about-header">关于</h2>
+            <div class="glass-card" style="margin-bottom: 2rem;">
+                <div class="about-section">
+                    <h3>关于这个网站</h3>
+                    <p>这是一个属于 Lihe 的个人空间，用于记录思考、分享热爱。在这里，你可以写下随笔想法、访问小游戏、使用各种实用工具。</p>
+                </div>
+                <div class="about-section">
+                    <h3>使用技术</h3>
+                    <div class="tech-tags">
+                        <span class="tech-tag">HTML5</span>
+                        <span class="tech-tag">CSS3</span>
+                        <span class="tech-tag">JavaScript</span>
+                        <span class="tech-tag">localStorage</span>
+                        <span class="tech-tag">Glass Morphism</span>
+                        <span class="tech-tag">CSS Animation</span>
+                    </div>
+                </div>
+                <div class="about-section">
+                    <h3>更新日志</h3>
+                    <ul class="changelog">
+                        <li><span class="version">v1.0</span> - 初始版本发布</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modals -->
+    <!-- Calculator Modal -->
+    <div class="modal-overlay" id="modal-calculator">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal('calculator')">&times;</button>
+            <h3 class="modal-title">计算器</h3>
+            <div class="calculator" id="calculator">
+                <div class="calc-display" id="calcDisplay">0</div>
+                <button class="calc-btn clear" onclick="calcClear()">C</button>
+                <button class="calc-btn" onclick="calcBackspace()">⌫</button>
+                <button class="calc-btn operator" onclick="calcOperator('/')">÷</button>
+                <button class="calc-btn operator" onclick="calcOperator('*')">×</button>
+                <button class="calc-btn" onclick="calcNumber('7')">7</button>
+                <button class="calc-btn" onclick="calcNumber('8')">8</button>
+                <button class="calc-btn" onclick="calcNumber('9')">9</button>
+                <button class="calc-btn operator" onclick="calcOperator('-')">−</button>
+                <button class="calc-btn" onclick="calcNumber('4')">4</button>
+                <button class="calc-btn" onclick="calcNumber('5')">5</button>
+                <button class="calc-btn" onclick="calcNumber('6')">6</button>
+                <button class="calc-btn operator" onclick="calcOperator('+')">+</button>
+                <button class="calc-btn" onclick="calcNumber('1')">1</button>
+                <button class="calc-btn" onclick="calcNumber('2')">2</button>
+                <button class="calc-btn" onclick="calcNumber('3')">3</button>
+                <button class="calc-btn equals" onclick="calcEquals()">=</button>
+                <button class="calc-btn" onclick="calcNumber('0')" style="grid-column: span 2;">0</button>
+                <button class="calc-btn" onclick="calcNumber('.')">.</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Countdown Modal -->
+    <div class="modal-overlay" id="modal-countdown">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal('countdown')">&times;</button>
+            <h3 class="modal-title">倒计时</h3>
+            <div class="countdown-display" id="countdownDisplay">00:00:00</div>
+            <div class="countdown-inputs">
+                <div class="countdown-input-group">
+                    <label>小时</label>
+                    <input type="number" id="countHours" min="0" max="99" value="0">
+                </div>
+                <div class="countdown-input-group">
+                    <label>分钟</label>
+                    <input type="number" id="countMinutes" min="0" max="59" value="0">
+                </div>
+                <div class="countdown-input-group">
+                    <label>秒数</label>
+                    <input type="number" id="countSeconds" min="0" max="59" value="0">
+                </div>
+            </div>
+            <div class="countdown-btns">
+                <button class="btn" id="countStartBtn" onclick="countdownStart()">开始</button>
+                <button class="btn btn-secondary" onclick="countdownPause()">暂停</button>
+                <button class="btn btn-secondary" onclick="countdownReset()">重置</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Random Picker Modal -->
+    <div class="modal-overlay" id="modal-picker">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal('picker')">&times;</button>
+            <h3 class="modal-title">随机决定器</h3>
+            <textarea class="picker-input" id="pickerOptions" placeholder="输入选项，用逗号分隔&#10;例如：选项1, 选项2, 选项3"></textarea>
+            <div style="text-align: center;">
+                <button class="btn" onclick="pickerRoll()">随机选择</button>
+                <button class="btn btn-secondary" onclick="pickerClear()">清空</button>
+            </div>
+            <div class="picker-result" id="pickerResult">
+                <div class="picker-result-text" id="pickerResultText"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Modal -->
+    <div class="modal-overlay" id="modal-game">
+        <div class="modal" style="max-width: 800px;">
+            <button class="modal-close" onclick="closeModal('game')">&times;</button>
+            <h3 class="modal-title">忍者神龟</h3>
+            <div style="text-align: center; padding: 2rem;">
+                <div style="font-size: 4rem; margin-bottom: 1rem;">🐢</div>
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">经典街机游戏</p>
+                <p style="color: var(--text-secondary); margin-bottom: 2rem;">游戏文件位于本地，点击下方按钮启动游戏：</p>
+                <a href="file:///D:/QClawWorkspace/tmnt-game/index.html" target="_blank" class="btn">打开游戏</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== Audio Context for UI sounds =====
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playClickSound() {
+            try {
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                oscillator.frequency.value = 800;
+                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + 0.1);
+            } catch(e) {}
+        }
+
+        // ===== Router =====
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+            
+            const page = document.getElementById('page-' + pageId);
+            if (page) {
+                page.classList.add('active');
+            }
+            
+            const navLink = document.querySelector(`.nav-links a[data-page="${pageId}"]`);
+            if (navLink) {
+                navLink.classList.add('active');
+            }
+            
+            // Update stats on home page
+            if (pageId === 'home') {
+                updateStats();
+            }
+        }
+
+        function handleHashChange() {
+            const hash = window.location.hash.slice(1) || 'home';
+            showPage(hash);
+        }
+
+        window.addEventListener('hashchange', handleHashChange);
+        
+        // Initial page load
+        if (window.location.hash) {
+            handleHashChange();
+        } else {
+            showPage('home');
+        }
+
+        // ===== Mobile Navigation =====
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navLinks.classList.toggle('active');
+            playClickSound();
+        });
+
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // ===== Notes System =====
+        let notes = JSON.parse(localStorage.getItem('lihe-notes') || '[]');
+        let currentFilter = 'all';
+        let editingNoteId = null;
+
+        function saveNotes() {
+            localStorage.setItem('lihe-notes', JSON.stringify(notes));
+            renderNotes();
+            updateStats();
+        }
+
+        function updateStats() {
+            document.getElementById('stat-notes').textContent = notes.length;
+        }
+
+        function renderNotes() {
+            const grid = document.getElementById('notesGrid');
+            const searchTerm = document.getElementById('searchNotes').value.toLowerCase();
+            
+            let filteredNotes = notes.filter(note => {
+                const matchesFilter = currentFilter === 'all' || note.category === currentFilter;
+                const matchesSearch = note.content.toLowerCase().includes(searchTerm) || 
+                    note.tags.some(tag => tag.toLowerCase().includes(searchTerm));
+                return matchesFilter && matchesSearch;
+            });
+
+            if (filteredNotes.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1 / -1;">
+                        <div class="empty-state-icon">✨</div>
+                        <div class="empty-state-text">还没有随笔，写下你的第一条想法吧 ✨</div>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = filteredNotes.map(note => `
+                <div class="glass-card note-card" data-id="${note.id}">
+                    <span class="note-category ${getCategoryClass(note.category)}">${note.category}</span>
+                    <div class="note-content">${escapeHtml(note.content)}</div>
+                    ${note.tags.length > 0 ? `
+                        <div class="note-tags">
+                            ${note.tags.map(tag => `<span class="note-tag">${escapeHtml(tag)}</span>`).join('')}
+                        </div>
+                    ` : ''}
+                    <div class="note-meta">
+                        <span class="note-time">${formatDate(note.timestamp)}</span>
+                        <div class="note-actions">
+                            <button onclick="editNote(${note.id})" title="编辑">✏️</button>
+                            <button class="delete" onclick="deleteNote(${note.id})" title="删除">🗑️</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getCategoryClass(category) {
+            const classes = {
+                '随笔': 'suiyi',
+                '思考': 'sikao',
+                '爱好': 'aihao',
+                '技术': 'jishu'
+            };
+            return classes[category] || 'suiyi';
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatDate(timestamp) {
+            const date = new Date(timestamp);
+            return date.toLocaleDateString('zh-CN', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        function addNote() {
+            const content = document.getElementById('noteContent').value.trim();
+            const category = document.getElementById('noteCategory').value;
+            const tagsInput = document.getElementById('noteTags').value.trim();
+            const tags = tagsInput ? tagsInput.split(',').map(t => t.trim()).filter(t => t) : [];
+
+            if (!content) {
+                alert('请输入随笔内容');
+                return;
+            }
+
+            if (editingNoteId) {
+                const noteIndex = notes.findIndex(n => n.id === editingNoteId);
+                if (noteIndex !== -1) {
+                    notes[noteIndex] = {
+                        ...notes[noteIndex],
+                        content,
+                        category,
+                        tags,
+                        timestamp: Date.now()
+                    };
+                }
+                editingNoteId = null;
+                document.getElementById('addNoteBtn').textContent = '发布随笔';
+            } else {
+                notes.unshift({
+                    id: Date.now(),
+                    content,
+                    category,
+                    tags,
+                    timestamp: Date.now()
+                });
+            }
+
+            document.getElementById('noteContent').value = '';
+            document.getElementById('noteTags').value = '';
+            document.getElementById('charCount').textContent = '0';
+            saveNotes();
+            playClickSound();
+        }
+
+        function editNote(id) {
+            const note = notes.find(n => n.id === id);
+            if (!note) return;
+
+            editingNoteId = id;
+            document.getElementById('noteContent').value = note.content;
+            document.getElementById('noteCategory').value = note.category;
+            document.getElementById('noteTags').value = note.tags.join(', ');
+            document.getElementById('charCount').textContent = note.content.length;
+            document.getElementById('addNoteBtn').textContent = '保存修改';
+            document.getElementById('noteContent').focus();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            playClickSound();
+        }
+
+        function deleteNote(id) {
+            if (confirm('确定要删除这条随笔吗？')) {
+                notes = notes.filter(n => n.id !== id);
+                saveNotes();
+                playClickSound();
+            }
+        }
+
+        // Event listeners for notes
+        document.getElementById('addNoteBtn').addEventListener('click', addNote);
+        
+        document.getElementById('noteContent').addEventListener('input', function() {
+            document.getElementById('charCount').textContent = this.value.length;
+        });
+
+        document.getElementById('searchNotes').addEventListener('input', renderNotes);
+
+        // Filter buttons
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentFilter = this.dataset.filter;
+                renderNotes();
+                playClickSound();
+            });
+        });
+
+        // ===== Modals =====
+        function openModal(modalId) {
+            document.getElementById('modal-' + modalId).classList.add('active');
+            playClickSound();
+        }
+
+        function closeModal(modalId) {
+            document.getElementById('modal-' + modalId).classList.remove('active');
+            playClickSound();
+        }
+
+        // Close modal on overlay click
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                }
+            });
+        });
+
+        // ===== Calculator =====
+        let calcValue = '0';
+        let calcOperatorValue = null;
+        let calcPreviousValue = null;
+        let calcShouldResetDisplay = false;
+
+        function calcUpdateDisplay() {
+            document.getElementById('calcDisplay').textContent = calcValue;
+        }
+
+        function calcNumber(num) {
+            if (calcShouldResetDisplay || calcValue === '0') {
+                calcValue = num;
+                calcShouldResetDisplay = false;
+            } else if (calcValue.length < 15) {
+                calcValue += num;
+            }
+            calcUpdateDisplay();
+            playClickSound();
+        }
+
+        function calcOperator(op) {
+            if (calcOperatorValue !== null && !calcShouldResetDisplay) {
+                calcEquals();
+            }
+            calcPreviousValue = calcValue;
+            calcOperatorValue = op;
+            calcShouldResetDisplay = true;
+            playClickSound();
+        }
+
+        function calcEquals() {
+            if (calcOperatorValue === null || calcPreviousValue === null) return;
+            
+            const prev = parseFloat(calcPreviousValue);
+            const curr = parseFloat(calcValue);
+            let result;
+
+            switch(calcOperatorValue) {
+                case '+': result = prev + curr; break;
+                case '-': result = prev - curr; break;
+                case '*': result = prev * curr; break;
+                case '/': result = curr !== 0 ? prev / curr : 'Error'; break;
+            }
+
+            calcValue = String(result);
+            calcOperatorValue = null;
+            calcPreviousValue = null;
+            calcShouldResetDisplay = true;
+            calcUpdateDisplay();
+            playClickSound();
+        }
+
+        function calcClear() {
+            calcValue = '0';
+            calcOperatorValue = null;
+            calcPreviousValue = null;
+            calcShouldResetDisplay = false;
+            calcUpdateDisplay();
+            playClickSound();
+        }
+
+        function calcBackspace() {
+            if (calcShouldResetDisplay) return;
+            calcValue = calcValue.length > 1 ? calcValue.slice(0, -1) : '0';
+            calcUpdateDisplay();
+            playClickSound();
+        }
+
+        // Keyboard support for calculator
+        document.addEventListener('keydown', function(e) {
+            const activeModal = document.querySelector('.modal-overlay.active');
+            if (!activeModal || activeModal.id !== 'modal-calculator') return;
+            
+            if (e.key >= '0' && e.key <= '9') calcNumber(e.key);
+            else if (e.key === '.') calcNumber('.');
+            else if (e.key === '+') calcOperator('+');
+            else if (e.key === '-') calcOperator('-');
+            else if (e.key === '*') calcOperator('*');
+            else if (e.key === '/') calcOperator('/');
+            else if (e.key === 'Enter' || e.key === '=') calcEquals();
+            else if (e.key === 'Escape') calcClear();
+            else if (e.key === 'Backspace') calcBackspace();
+        });
+
+        // ===== Countdown Timer =====
+        let countdownInterval = null;
+        let countdownRemaining = 0;
+        let countdownRunning = false;
+
+        function countdownUpdateDisplay() {
+            const hours = Math.floor(countdownRemaining / 3600);
+            const minutes = Math.floor((countdownRemaining % 3600) / 60);
+            const seconds = countdownRemaining % 60;
+            document.getElementById('countdownDisplay').textContent = 
+                String(hours).padStart(2, '0') + ':' +
+                String(minutes).padStart(2, '0') + ':' +
+                String(seconds).padStart(2, '0');
+        }
+
+        function countdownStart() {
+            if (countdownRunning) return;
+            
+            if (countdownRemaining === 0) {
+                const hours = parseInt(document.getElementById('countHours').value) || 0;
+                const minutes = parseInt(document.getElementById('countMinutes').value) || 0;
+                const seconds = parseInt(document.getElementById('countSeconds').value) || 0;
+                countdownRemaining = hours * 3600 + minutes * 60 + seconds;
+            }
+            
+            if (countdownRemaining <= 0) return;
+            
+            countdownRunning = true;
+            document.getElementById('countStartBtn').textContent = '运行中...';
+            document.getElementById('countStartBtn').disabled = true;
+            
+            countdownInterval = setInterval(() => {
+                countdownRemaining--;
+                countdownUpdateDisplay();
+                
+                if (countdownRemaining <= 0) {
+                    countdownPause();
+                    countdownAlarm();
+                }
+            }, 1000);
+            playClickSound();
+        }
+
+        function countdownPause() {
+            if (!countdownRunning) return;
+            
+            clearInterval(countdownInterval);
+            countdownRunning = false;
+            document.getElementById('countStartBtn').textContent = '继续';
+            document.getElementById('countStartBtn').disabled = false;
+            playClickSound();
+        }
+
+        function countdownReset() {
+            countdownPause();
+            countdownRemaining = 0;
+            document.getElementById('countHours').value = '0';
+            document.getElementById('countMinutes').value = '0';
+            document.getElementById('countSeconds').value = '0';
+            countdownUpdateDisplay();
+            playClickSound();
+        }
+
+        function countdownAlarm() {
+            // Play alarm sound
+            try {
+                for (let i = 0; i < 3; i++) {
+                    setTimeout(() => {
+                        const osc = audioCtx.createOscillator();
+                        const gain = audioCtx.createGain();
+                        osc.connect(gain);
+                        gain.connect(audioCtx.destination);
+                        osc.frequency.value = 880;
+                        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
+                        osc.start(audioCtx.currentTime);
+                        osc.stop(audioCtx.currentTime + 0.5);
+                    }, i * 600);
+                }
+            } catch(e) {}
+            alert('倒计时结束！');
+        }
+
+        // ===== Random Picker =====
+        function pickerRoll() {
+            const input = document.getElementById('pickerOptions').value.trim();
+            if (!input) {
+                alert('请输入选项');
+                return;
+            }
+
+            const options = input.split(',').map(s => s.trim()).filter(s => s);
+            if (options.length < 2) {
+                alert('请至少输入2个选项');
+                return;
+            }
+
+            const resultText = document.getElementById('pickerResultText');
+            const resultDiv = document.getElementById('pickerResult');
+            
+            // Animation effect
+            let iterations = 0;
+            const maxIterations = 20;
+            const interval = setInterval(() => {
+                resultText.textContent = options[Math.floor(Math.random() * options.length)];
+                iterations++;
+                if (iterations >= maxIterations) {
+                    clearInterval(interval);
+                    // Final result
+                    const finalChoice = options[Math.floor(Math.random() * options.length)];
+                    resultText.textContent = finalChoice;
+                    resultDiv.classList.add('show');
+                    playClickSound();
+                }
+            }, 100);
+        }
+
+        function pickerClear() {
+            document.getElementById('pickerOptions').value = '';
+            document.getElementById('pickerResult').classList.remove('show');
+            playClickSound();
+        }
+
+        // ===== Game Modal =====
+        function openGameModal() {
+            openModal('game');
+        }
+
+        // ===== Initialize =====
+        renderNotes();
+        updateStats();
+    </script>
+</body>
+</html>
