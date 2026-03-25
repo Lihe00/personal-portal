@@ -1,1788 +1,243 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lihe 的个人空间</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --neon-green: #00ff88;
-            --neon-purple: #8800ff;
-            --bg-dark: #0a0a0f;
-            --bg-card: rgba(255, 255, 255, 0.05);
-            --bg-card-hover: rgba(255, 255, 255, 0.1);
-            --text-primary: #ffffff;
-            --text-secondary: rgba(255, 255, 255, 0.7);
-            --border-glass: rgba(255, 255, 255, 0.1);
-            --shadow-glow: 0 0 30px rgba(0, 255, 136, 0.2);
-            --cat-suiyi: #00ff88;
-            --cat-sikao: #8800ff;
-            --cat-aihao: #ff8800;
-            --cat-jishu: #00aaff;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg-dark);
-            color: var(--text-primary);
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* Animated Background */
-        .bg-animation {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            overflow: hidden;
-        }
-
-        .bg-animation::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(ellipse at 20% 20%, rgba(136, 0, 255, 0.15) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 80%, rgba(0, 255, 136, 0.1) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 50%, rgba(0, 170, 255, 0.05) 0%, transparent 70%);
-            animation: bgPulse 8s ease-in-out infinite;
-        }
-
-        @keyframes bgPulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.8; transform: scale(1.05); }
-        }
-
-        .particles {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-        }
-
-        .particle {
-            position: absolute;
-            width: 3px;
-            height: 3px;
-            background: var(--neon-green);
-            border-radius: 50%;
-            opacity: 0.3;
-            animation: float 15s infinite ease-in-out;
-        }
-
-        .particle:nth-child(2n) { background: var(--neon-purple); }
-        .particle:nth-child(3n) { animation-duration: 20s; }
-        .particle:nth-child(4n) { animation-duration: 25s; }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0) translateX(0); opacity: 0.3; }
-            25% { transform: translateY(-100px) translateX(50px); opacity: 0.6; }
-            50% { transform: translateY(-200px) translateX(-30px); opacity: 0.3; }
-            75% { transform: translateY(-100px) translateX(70px); opacity: 0.5; }
-        }
-
-        /* Navigation */
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            padding: 1rem 2rem;
-            background: rgba(10, 10, 15, 0.8);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border-glass);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .nav-logo {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.5rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--neon-green), var(--neon-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 0.5rem;
-            list-style: none;
-        }
-
-        .nav-links a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            padding: 0.75rem 1.25rem;
-            border-radius: 12px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .nav-links a::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, var(--neon-green), var(--neon-purple));
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            border-radius: 12px;
-            z-index: -1;
-        }
-
-        .nav-links a:hover {
-            color: var(--text-primary);
-        }
-
-        .nav-links a:hover::before {
-            opacity: 0.15;
-        }
-
-        .nav-links a.active {
-            color: var(--neon-green);
-            text-shadow: 0 0 20px var(--neon-green);
-        }
-
-        .nav-links a.active::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 30px;
-            height: 3px;
-            background: var(--neon-green);
-            border-radius: 2px;
-            box-shadow: 0 0 10px var(--neon-green);
-        }
-
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            gap: 5px;
-            cursor: pointer;
-            padding: 10px;
-        }
-
-        .hamburger span {
-            width: 25px;
-            height: 2px;
-            background: var(--text-primary);
-            transition: all 0.3s ease;
-        }
-
-        /* Main Content */
-        main {
-            padding-top: 80px;
-            min-height: 100vh;
-        }
-
-        .page {
-            display: none;
-            animation: fadeIn 0.4s ease;
-            padding: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .page.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Home Page */
-        .hero {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 80vh;
-            text-align: center;
-            position: relative;
-        }
-
-        .hero-name {
-            font-family: 'Orbitron', sans-serif;
-            font-size: clamp(4rem, 15vw, 10rem);
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--neon-green) 0%, var(--neon-purple) 50%, var(--neon-green) 100%);
-            background-size: 200% 200%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: gradientShift 5s ease infinite;
-            text-shadow: 0 0 60px rgba(0, 255, 136, 0.5);
-            position: relative;
-        }
-
-        @keyframes gradientShift {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
-        .hero-subtitle {
-            font-size: clamp(1.2rem, 4vw, 2rem);
-            color: var(--text-secondary);
-            margin-top: 1rem;
-            letter-spacing: 0.5em;
-            animation: subtitleGlow 3s ease-in-out infinite;
-        }
-
-        @keyframes subtitleGlow {
-            0%, 100% { text-shadow: 0 0 10px rgba(136, 0, 255, 0.3); }
-            50% { text-shadow: 0 0 20px rgba(136, 0, 255, 0.6); }
-        }
-
-        .hero-tagline {
-            font-size: 1.3rem;
-            color: var(--text-secondary);
-            margin-top: 2rem;
-            padding: 1rem 2rem;
-            background: var(--bg-card);
-            border-radius: 50px;
-            border: 1px solid var(--border-glass);
-            backdrop-filter: blur(10px);
-        }
-
-        .hero-stats {
-            display: flex;
-            gap: 3rem;
-            margin-top: 3rem;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-number {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--neon-green);
-        }
-
-        .stat-label {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            margin-top: 0.5rem;
-        }
-
-        .floating-elements {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            overflow: hidden;
-        }
-
-        .float-item {
-            position: absolute;
-            font-size: 2rem;
-            opacity: 0.2;
-            animation: floatAround 10s infinite ease-in-out;
-        }
-
-        .float-item:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
-        .float-item:nth-child(2) { top: 20%; right: 15%; animation-delay: -2s; }
-        .float-item:nth-child(3) { bottom: 30%; left: 8%; animation-delay: -4s; }
-        .float-item:nth-child(4) { bottom: 15%; right: 10%; animation-delay: -6s; }
-        .float-item:nth-child(5) { top: 50%; left: 5%; animation-delay: -8s; }
-
-        @keyframes floatAround {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            25% { transform: translateY(-20px) rotate(5deg); }
-            50% { transform: translateY(0) rotate(0deg); }
-            75% { transform: translateY(20px) rotate(-5deg); }
-        }
-
-        /* Glass Card */
-        .glass-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-glass);
-            border-radius: 20px;
-            padding: 2rem;
-            backdrop-filter: blur(20px);
-            transition: all 0.3s ease;
-        }
-
-        .glass-card:hover {
-            background: var(--bg-card-hover);
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-glow);
-        }
-
-        /* Notes Page */
-        .notes-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .notes-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2rem;
-        }
-
-        .notes-search {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .search-input {
-            background: var(--bg-card);
-            border: 1px solid var(--border-glass);
-            border-radius: 12px;
-            padding: 0.75rem 1rem;
-            color: var(--text-primary);
-            font-size: 1rem;
-            width: 250px;
-            transition: all 0.3s ease;
-        }
-
-        .search-input:focus {
-            outline: none;
-            border-color: var(--neon-green);
-            box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
-        }
-
-        .notes-form {
-            margin-bottom: 2rem;
-        }
-
-        .form-group {
-            margin-bottom: 1rem;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        .form-textarea {
-            width: 100%;
-            background: var(--bg-card);
-            border: 1px solid var(--border-glass);
-            border-radius: 12px;
-            padding: 1rem;
-            color: var(--text-primary);
-            font-size: 1rem;
-            resize: vertical;
-            min-height: 120px;
-            font-family: 'Inter', sans-serif;
-            transition: all 0.3s ease;
-        }
-
-        .form-textarea:focus {
-            outline: none;
-            border-color: var(--neon-green);
-            box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
-        }
-
-        .form-row {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .form-select, .form-input {
-            background: var(--bg-card);
-            border: 1px solid var(--border-glass);
-            border-radius: 12px;
-            padding: 0.75rem 1rem;
-            color: var(--text-primary);
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .form-select:focus, .form-input:focus {
-            outline: none;
-            border-color: var(--neon-green);
-        }
-
-        .form-select option {
-            background: var(--bg-dark);
-        }
-
-        .btn {
-            background: linear-gradient(135deg, var(--neon-green), #00cc6a);
-            border: none;
-            border-radius: 12px;
-            padding: 0.75rem 1.5rem;
-            color: var(--bg-dark);
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.3);
-        }
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        .btn-secondary {
-            background: var(--bg-card);
-            border: 1px solid var(--border-glass);
-            color: var(--text-primary);
-        }
-
-        .btn-secondary:hover {
-            background: var(--bg-card-hover);
-            box-shadow: 0 0 20px rgba(136, 0, 255, 0.2);
-        }
-
-        .btn-danger {
-            background: linear-gradient(135deg, #ff4444, #cc0000);
-            color: white;
-        }
-
-        .char-count {
-            text-align: right;
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            margin-top: 0.5rem;
-        }
-
-        .notes-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .note-card {
-            position: relative;
-            animation: noteAppear 0.4s ease;
-        }
-
-        @keyframes noteAppear {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        .note-category {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 500;
-            margin-bottom: 0.75rem;
-        }
-
-        .note-category.suiyi { background: rgba(0, 255, 136, 0.2); color: var(--cat-suiyi); }
-        .note-category.sikao { background: rgba(136, 0, 255, 0.2); color: var(--cat-sikao); }
-        .note-category.aihao { background: rgba(255, 136, 0, 0.2); color: var(--cat-aihao); }
-        .note-category.jishu { background: rgba(0, 170, 255, 0.2); color: var(--cat-jishu); }
-
-        .note-content {
-            color: var(--text-primary);
-            line-height: 1.6;
-            margin-bottom: 1rem;
-            white-space: pre-wrap;
-            word-break: break-word;
-        }
-
-        .note-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .note-tag {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 0.2rem 0.6rem;
-            border-radius: 8px;
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-        }
-
-        .note-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 1rem;
-            border-top: 1px solid var(--border-glass);
-        }
-
-        .note-time {
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-        }
-
-        .note-actions {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .note-actions button {
-            background: transparent;
-            border: none;
-            color: var(--text-secondary);
-            cursor: pointer;
-            padding: 0.5rem;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .note-actions button:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--text-primary);
-        }
-
-        .note-actions button.delete:hover {
-            color: #ff4444;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 4rem 2rem;
-            color: var(--text-secondary);
-        }
-
-        .empty-state-icon {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-        }
-
-        .empty-state-text {
-            font-size: 1.2rem;
-        }
-
-        .filter-btns {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-        }
-
-        .filter-btn {
-            background: var(--bg-card);
-            border: 1px solid var(--border-glass);
-            border-radius: 20px;
-            padding: 0.5rem 1rem;
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
-        }
-
-        .filter-btn:hover, .filter-btn.active {
-            background: rgba(0, 255, 136, 0.2);
-            border-color: var(--neon-green);
-            color: var(--neon-green);
-        }
-
-        /* Games Page */
-        .games-header {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .games-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .game-card {
-            text-align: center;
-            cursor: pointer;
-        }
-
-        .game-icon {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-        }
-
-        .game-title {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .game-desc {
-            color: var(--text-secondary);
-            margin-bottom: 1.5rem;
-        }
-
-        .coming-soon {
-            opacity: 0.5;
-        }
-
-        /* Tools Page */
-        .tools-header {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .tools-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .tool-card {
-            text-align: center;
-            cursor: pointer;
-        }
-
-        .tool-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-
-        .tool-title {
-            font-size: 1.3rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .tool-desc {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        /* Modal */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
-            z-index: 2000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-        }
-
-        .modal {
-            background: var(--bg-dark);
-            border: 1px solid var(--border-glass);
-            border-radius: 20px;
-            padding: 2rem;
-            max-width: 500px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-            animation: modalSlide 0.3s ease;
-        }
-
-        @keyframes modalSlide {
-            from { transform: translateY(-50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: transparent;
-            border: none;
-            color: var(--text-secondary);
-            font-size: 1.5rem;
-            cursor: pointer;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-
-        .modal-close:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--text-primary);
-        }
-
-        .modal-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        /* Calculator */
-        .calculator {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 0.75rem;
-        }
-
-        .calc-display {
-            grid-column: span 4;
-            background: var(--bg-card);
-            border: 1px solid var(--border-glass);
-            border-radius: 12px;
-            padding: 1rem;
-            text-align: right;
-            font-size: 1.5rem;
-            font-family: 'Orbitron', sans-serif;
-            margin-bottom: 0.5rem;
-            min-height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            word-break: break-all;
-        }
-
-        .calc-btn {
-            background: var(--bg-card);
-            border: 1px solid var(--border-glass);
-            border-radius: 12px;
-            padding: 1rem;
-            font-size: 1.25rem;
-            color: var(--text-primary);
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .calc-btn:hover {
-            background: var(--bg-card-hover);
-            transform: scale(1.05);
-        }
-
-        .calc-btn:active {
-            transform: scale(0.95);
-            background: rgba(0, 255, 136, 0.2);
-        }
-
-        .calc-btn.operator {
-            color: var(--neon-green);
-            font-weight: 600;
-        }
-
-        .calc-btn.equals {
-            background: linear-gradient(135deg, var(--neon-green), #00cc6a);
-            color: var(--bg-dark);
-            font-weight: 700;
-        }
-
-        .calc-btn.clear {
-            color: #ff4444;
-        }
-
-        /* Random Picker */
-        .picker-input {
-            width: 100%;
-            background: var(--bg-card);
-            border: 1px solid var(--border-glass);
-            border-radius: 12px;
-            padding: 1rem;
-            color: var(--text-primary);
-            font-size: 1rem;
-            min-height: 100px;
-            resize: vertical;
-            margin-bottom: 1rem;
-        }
-
-        .picker-input:focus {
-            outline: none;
-            border-color: var(--neon-purple);
-        }
-
-        .picker-result {
-            background: linear-gradient(135deg, var(--neon-purple), var(--neon-green));
-            border-radius: 12px;
-            padding: 2rem;
-            text-align: center;
-            margin: 1.5rem 0;
-            animation: resultReveal 0.5s ease;
-            display: none;
-        }
-
-        .picker-result.show {
-            display: block;
-        }
-
-        @keyframes resultReveal {
-            from { transform: scale(0.5); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        .picker-result-text {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: white;
-        }
-
-        /* Countdown Timer */
-        .countdown-display {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 3rem;
-            text-align: center;
-            padding: 2rem;
-            background: var(--bg-card);
-            border-radius: 12px;
-            margin-bottom: 1.5rem;
-            border: 1px solid var(--border-glass);
-        }
-
-        .countdown-inputs {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-        }
-
-        .countdown-input-group {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .countdown-input-group label {
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-        }
-
-        .countdown-input-group input {
-            width: 80px;
-            background: var(--bg-card);
-            border: 1px solid var(--border-glass);
-            border-radius: 8px;
-            padding: 0.75rem;
-            color: var(--text-primary);
-            font-size: 1.25rem;
-            text-align: center;
-        }
-
-        .countdown-input-group input:focus {
-            outline: none;
-            border-color: var(--neon-green);
-        }
-
-        .countdown-btns {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        /* About Page */
-        .about-header {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .about-section {
-            margin-bottom: 2rem;
-        }
-
-        .about-section h3 {
-            font-size: 1.3rem;
-            margin-bottom: 1rem;
-            color: var(--neon-green);
-        }
-
-        .about-section p {
-            color: var(--text-secondary);
-            line-height: 1.8;
-        }
-
-        .tech-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.75rem;
-        }
-
-        .tech-tag {
-            background: var(--bg-card);
-            border: 1px solid var(--border-glass);
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-
-        .changelog {
-            list-style: none;
-        }
-
-        .changelog li {
-            padding: 0.75rem 0;
-            border-bottom: 1px solid var(--border-glass);
-            color: var(--text-secondary);
-        }
-
-        .changelog li:last-child {
-            border-bottom: none;
-        }
-
-        .changelog .version {
-            color: var(--neon-purple);
-            font-weight: 600;
-        }
-
-        /* Mobile Responsive */
-        @media (max-width: 768px) {
-            nav {
-                padding: 1rem;
-            }
-
-            .nav-links {
-                position: fixed;
-                top: 70px;
-                left: 0;
-                right: 0;
-                background: rgba(10, 10, 15, 0.95);
-                backdrop-filter: blur(20px);
-                flex-direction: column;
-                padding: 1rem;
-                gap: 0.5rem;
-                transform: translateY(-100%);
-                opacity: 0;
-                transition: all 0.3s ease;
-            }
-
-            .nav-links.active {
-                transform: translateY(0);
-                opacity: 1;
-            }
-
-            .hamburger {
-                display: flex;
-            }
-
-            .hamburger.active span:nth-child(1) {
-                transform: rotate(45deg) translate(5px, 5px);
-            }
-
-            .hamburger.active span:nth-child(2) {
-                opacity: 0;
-            }
-
-            .hamburger.active span:nth-child(3) {
-                transform: rotate(-45deg) translate(5px, -5px);
-            }
-
-            .hero-stats {
-                gap: 1.5rem;
-            }
-
-            .stat-number {
-                font-size: 2rem;
-            }
-
-            .notes-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .notes-search {
-                width: 100%;
-            }
-
-            .search-input {
-                width: 100%;
-            }
-
-            .form-row {
-                flex-direction: column;
-            }
-
-            .page {
-                padding: 1rem;
-            }
-
-            .countdown-display {
-                font-size: 2rem;
-            }
-        }
-
-        /* Sound feedback */
-        .sound-enabled * {
-            -webkit-tap-highlight-color: transparent;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>Lihe</title>
+<style>
+:root{--g:#00ff88;--p:#8800ff;--d:#0a0a0f;--c:rgba(255,255,255,0.05);--h:rgba(255,255,255,0.1);--t:#fff;--s:rgba(255,255,255,0.7);--b:rgba(255,255,255,0.1)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:sans-serif;background:var(--d);color:var(--t)}
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:1rem 2rem;background:rgba(10,10,15,0.8);backdrop-filter:blur(20px);border-bottom:1px solid var(--b);display:flex;justify-content:space-between}
+.nav-logo{font-size:1.5rem;font-weight:900;background:linear-gradient(135deg,var(--g),var(--p));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links{display:flex;gap:0.5rem;list-style:none}
+.nav-links a{color:var(--s);text-decoration:none;padding:0.75rem 1.25rem;border-radius:12px}
+.nav-links a.active{color:var(--g)}
+main{padding-top:80px;min-height:100vh}
+.page{display:none;padding:2rem;max-width:1200px;margin:0 auto}
+.page.active{display:block}
+.hero{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;text-align:center}
+.hero-name{font-size:clamp(3rem,12vw,8rem);font-weight:900;background:linear-gradient(135deg,var(--g),var(--p));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-stats{display:flex;gap:3rem;margin-top:3rem}
+.stat-number{font-size:2.5rem;font-weight:700;color:var(--g)}
+.stat-label{color:var(--s)}
+.glass-card{background:var(--c);border:1px solid var(--b);border-radius:20px;padding:2rem}
+.glass-card:hover{transform:translateY(-5px)}
+.games-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem}
+.game-card{text-align:center;cursor:pointer}
+.game-icon{font-size:4rem;margin-bottom:1rem}
+.btn{background:linear-gradient(135deg,var(--g),#00cc6a);border:none;border-radius:12px;padding:0.75rem 1.5rem;color:var(--d);font-size:1rem;font-weight:600;cursor:pointer}
+.btn:hover{transform:translateY(-2px)}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.9);backdrop-filter:blur(10px);z-index:2000;display:none;align-items:center;justify-content:center;padding:1rem}
+.modal-overlay.active{display:flex}
+.modal{background:var(--d);border:1px solid var(--b);border-radius:20px;padding:2rem;max-width:500px;width:100%;max-height:90vh;overflow-y:auto;position:relative}
+.modal-large{max-width:900px}
+.modal-close{position:absolute;top:1rem;right:1rem;background:transparent;border:none;color:var(--s);font-size:1.5rem;cursor:pointer}
+#tmntCanvas{display:block}
+#snakeCanvas{border:2px solid var(--g);background:#0a0a0f}
+.snake-game-container{display:flex;flex-direction:column;align-items:center;border:2px solid var(--g);border-radius:12px;padding:20px;position:relative}
+.snake-header{display:flex;justify-content:space-between;width:400px;margin-bottom:10px}
+.snake-score{color:var(--g)}
+.snake-high-score{color:var(--p)}
+.snake-game-over{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.9);padding:2rem;border-radius:12px;text-align:center;display:none;border:2px solid var(--g)}
+.snake-game-over.show{display:block}
+.calculator{display:grid;grid-template-columns:repeat(4,1fr);gap:0.75rem}
+.calc-display{grid-column:span 4;background:var(--c);border:1px solid var(--b);border-radius:12px;padding:1rem;text-align:right;font-size:1.5rem;min-height:60px}
+.calc-btn{background:var(--c);border:1px solid var(--b);border-radius:12px;padding:1rem;font-size:1.25rem;color:var(--t);cursor:pointer}
+.calc-btn.equals{background:var(--g);color:var(--d)}
+.notes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem}
+.note-card{background:var(--c);border:1px solid var(--b);border-radius:16px;padding:1.5rem}
+.note-category{display:inline-block;padding:0.25rem 0.75rem;border-radius:20px;font-size:0.8rem}
+.note-category.suiyi{background:rgba(0,255,136,0.2);color:var(--g)}
+.note-category.sikao{background:rgba(136,0,255,0.2);color:var(--p)}
+.note-content{white-space:pre-wrap;word-break:break-word;line-height:1.6;margin-bottom:1rem}
+.note-meta{display:flex;justify-content:space-between;padding-top:1rem;border-top:1px solid var(--b)}
+.note-time{color:var(--s);font-size:0.85rem}
+.form-textarea{width:100%;background:var(--c);border:1px solid var(--b);border-radius:12px;padding:1rem;color:var(--t);resize:vertical;min-height:100px;margin-bottom:1rem}
+.form-select,.form-input{background:var(--c);border:1px solid var(--b);border-radius:12px;padding:0.75rem;color:var(--t)}
+.filter-btn{background:var(--c);border:1px solid var(--b);border-radius:20px;padding:0.5rem 1rem;color:var(--s);cursor:pointer}
+.filter-btn.active{background:rgba(0,255,136,0.2);border-color:var(--g);color:var(--g)}
+.countdown-display{font-size:3rem;text-align:center;padding:2rem;background:var(--c);border-radius:12px;margin-bottom:1.5rem}
+.countdown-inputs{display:flex;justify-content:center;gap:1rem;margin-bottom:1.5rem}
+.countdown-input-group{display:flex;flex-direction:column;align-items:center;gap:0.5rem}
+.countdown-input-group label{color:var(--s);font-size:0.85rem}
+.countdown-input-group input{width:80px;background:var(--c);border:1px solid var(--b);border-radius:8px;padding:0.75rem;color:var(--t);font-size:1.25rem;text-align:center}
+.countdown-btns{display:flex;justify-content:center;gap:1rem}
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1.5rem}
+</style>
 </head>
 <body>
-    <!-- Animated Background -->
-    <div class="bg-animation">
-        <div class="particles">
-            <div class="particle" style="top: 10%; left: 20%;"></div>
-            <div class="particle" style="top: 30%; left: 60%;"></div>
-            <div class="particle" style="top: 50%; left: 30%;"></div>
-            <div class="particle" style="top: 70%; left: 80%;"></div>
-            <div class="particle" style="top: 20%; left: 90%;"></div>
-            <div class="particle" style="top: 80%; left: 10%;"></div>
-            <div class="particle" style="top: 40%; left: 70%;"></div>
-            <div class="particle" style="top: 60%; left: 40%;"></div>
-        </div>
-    </div>
-
-    <!-- Navigation -->
-    <nav>
-        <div class="nav-logo">Lihe</div>
-        <ul class="nav-links" id="navLinks">
-            <li><a href="#home" class="active" data-page="home">首页</a></li>
-            <li><a href="#notes" data-page="notes">随笔</a></li>
-            <li><a href="#games" data-page="games">游戏</a></li>
-            <li><a href="#tools" data-page="tools">工具</a></li>
-            <li><a href="#about" data-page="about">关于</a></li>
-        </ul>
-        <div class="hamburger" id="hamburger">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-    </nav>
-
-    <!-- Main Content -->
-    <main>
-        <!-- Home Page -->
-        <div class="page active" id="page-home">
-            <div class="hero">
-                <div class="floating-elements">
-                    <span class="float-item">💡</span>
-                    <span class="float-item">🚀</span>
-                    <span class="float-item">✨</span>
-                    <span class="float-item">🎯</span>
-                    <span class="float-item">🌟</span>
-                </div>
-                <h1 class="hero-name">Lihe</h1>
-                <p class="hero-subtitle">创作者 · 思考者 · 开发者</p>
-                <p class="hero-tagline">记录思考，分享热爱</p>
-                <div class="hero-stats">
-                    <div class="stat-item">
-                        <div class="stat-number" id="stat-notes">0</div>
-                        <div class="stat-label">随笔</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number" id="stat-games">1</div>
-                        <div class="stat-label">游戏</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number" id="stat-tools">3</div>
-                        <div class="stat-label">工具</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Notes Page -->
-        <div class="page" id="page-notes">
-            <div class="notes-header">
-                <h2 class="notes-title">随笔</h2>
-                <div class="notes-search">
-                    <input type="text" class="search-input" placeholder="搜索随笔..." id="searchNotes">
-                </div>
-            </div>
-
-            <div class="filter-btns" id="filterBtns">
-                <button class="filter-btn active" data-filter="all">全部</button>
-                <button class="filter-btn" data-filter="随笔">随笔</button>
-                <button class="filter-btn" data-filter="思考">思考</button>
-                <button class="filter-btn" data-filter="爱好">爱好</button>
-                <button class="filter-btn" data-filter="技术">技术</button>
-            </div>
-
-            <div class="glass-card notes-form">
-                <div class="form-group">
-                    <label class="form-label">写下你的想法</label>
-                    <textarea class="form-textarea" id="noteContent" placeholder="在这里写下你的随笔..." maxlength="2000"></textarea>
-                    <div class="char-count"><span id="charCount">0</span> / 2000</div>
-                </div>
-                <div class="form-row">
-                    <select class="form-select" id="noteCategory">
-                        <option value="随笔">随笔</option>
-                        <option value="思考">思考</option>
-                        <option value="爱好">爱好</option>
-                        <option value="技术">技术</option>
-                    </select>
-                    <input type="text" class="form-input" id="noteTags" placeholder="标签 (用逗号分隔)" style="flex: 1;">
-                    <button class="btn" id="addNoteBtn">发布随笔</button>
-                </div>
-            </div>
-
-            <div class="notes-grid" id="notesGrid">
-                <!-- Notes will be rendered here -->
-            </div>
-        </div>
-
-        <!-- Games Page -->
-        <div class="page" id="page-games">
-            <h2 class="games-header">游戏</h2>
-            <div class="games-grid">
-                <div class="glass-card game-card" onclick="openGameModal()">
-                    <div class="game-icon">🐢</div>
-                    <h3 class="game-title">忍者神龟</h3>
-                    <p class="game-desc">经典街机游戏 - 忍者神龟</p>
-                    <button class="btn">开始游戏</button>
-                </div>
-                <div class="glass-card game-card coming-soon">
-                    <div class="game-icon">🎮</div>
-                    <h3 class="game-title">更多游戏</h3>
-                    <p class="game-desc">更多游戏开发中...</p>
-                    <button class="btn btn-secondary" disabled>敬请期待</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Tools Page -->
-        <div class="page" id="page-tools">
-            <h2 class="tools-header">工具</h2>
-            <div class="tools-grid">
-                <div class="glass-card tool-card" onclick="openModal('calculator')">
-                    <div class="tool-icon">🧮</div>
-                    <h3 class="tool-title">计算器</h3>
-                    <p class="tool-desc">简单实用的计算器</p>
-                </div>
-                <div class="glass-card tool-card" onclick="openModal('countdown')">
-                    <div class="tool-icon">⏱️</div>
-                    <h3 class="tool-title">倒计时</h3>
-                    <p class="tool-desc">设置倒计时提醒</p>
-                </div>
-                <div class="glass-card tool-card" onclick="openModal('picker')">
-                    <div class="tool-icon">🎲</div>
-                    <h3 class="tool-title">随机决定器</h3>
-                    <p class="tool-desc">帮你做出选择</p>
-                </div>
-                <div class="glass-card tool-card coming-soon">
-                    <div class="tool-icon">🔧</div>
-                    <h3 class="tool-title">更多工具</h3>
-                    <p class="tool-desc">更多工具开发中...</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- About Page -->
-        <div class="page" id="page-about">
-            <h2 class="about-header">关于</h2>
-            <div class="glass-card" style="margin-bottom: 2rem;">
-                <div class="about-section">
-                    <h3>关于这个网站</h3>
-                    <p>这是一个属于 Lihe 的个人空间，用于记录思考、分享热爱。在这里，你可以写下随笔想法、访问小游戏、使用各种实用工具。</p>
-                </div>
-                <div class="about-section">
-                    <h3>使用技术</h3>
-                    <div class="tech-tags">
-                        <span class="tech-tag">HTML5</span>
-                        <span class="tech-tag">CSS3</span>
-                        <span class="tech-tag">JavaScript</span>
-                        <span class="tech-tag">localStorage</span>
-                        <span class="tech-tag">Glass Morphism</span>
-                        <span class="tech-tag">CSS Animation</span>
-                    </div>
-                </div>
-                <div class="about-section">
-                    <h3>更新日志</h3>
-                    <ul class="changelog">
-                        <li><span class="version">v1.0</span> - 初始版本发布</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <!-- Modals -->
-    <!-- Calculator Modal -->
-    <div class="modal-overlay" id="modal-calculator">
-        <div class="modal">
-            <button class="modal-close" onclick="closeModal('calculator')">&times;</button>
-            <h3 class="modal-title">计算器</h3>
-            <div class="calculator" id="calculator">
-                <div class="calc-display" id="calcDisplay">0</div>
-                <button class="calc-btn clear" onclick="calcClear()">C</button>
-                <button class="calc-btn" onclick="calcBackspace()">⌫</button>
-                <button class="calc-btn operator" onclick="calcOperator('/')">÷</button>
-                <button class="calc-btn operator" onclick="calcOperator('*')">×</button>
-                <button class="calc-btn" onclick="calcNumber('7')">7</button>
-                <button class="calc-btn" onclick="calcNumber('8')">8</button>
-                <button class="calc-btn" onclick="calcNumber('9')">9</button>
-                <button class="calc-btn operator" onclick="calcOperator('-')">−</button>
-                <button class="calc-btn" onclick="calcNumber('4')">4</button>
-                <button class="calc-btn" onclick="calcNumber('5')">5</button>
-                <button class="calc-btn" onclick="calcNumber('6')">6</button>
-                <button class="calc-btn operator" onclick="calcOperator('+')">+</button>
-                <button class="calc-btn" onclick="calcNumber('1')">1</button>
-                <button class="calc-btn" onclick="calcNumber('2')">2</button>
-                <button class="calc-btn" onclick="calcNumber('3')">3</button>
-                <button class="calc-btn equals" onclick="calcEquals()">=</button>
-                <button class="calc-btn" onclick="calcNumber('0')" style="grid-column: span 2;">0</button>
-                <button class="calc-btn" onclick="calcNumber('.')">.</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Countdown Modal -->
-    <div class="modal-overlay" id="modal-countdown">
-        <div class="modal">
-            <button class="modal-close" onclick="closeModal('countdown')">&times;</button>
-            <h3 class="modal-title">倒计时</h3>
-            <div class="countdown-display" id="countdownDisplay">00:00:00</div>
-            <div class="countdown-inputs">
-                <div class="countdown-input-group">
-                    <label>小时</label>
-                    <input type="number" id="countHours" min="0" max="99" value="0">
-                </div>
-                <div class="countdown-input-group">
-                    <label>分钟</label>
-                    <input type="number" id="countMinutes" min="0" max="59" value="0">
-                </div>
-                <div class="countdown-input-group">
-                    <label>秒数</label>
-                    <input type="number" id="countSeconds" min="0" max="59" value="0">
-                </div>
-            </div>
-            <div class="countdown-btns">
-                <button class="btn" id="countStartBtn" onclick="countdownStart()">开始</button>
-                <button class="btn btn-secondary" onclick="countdownPause()">暂停</button>
-                <button class="btn btn-secondary" onclick="countdownReset()">重置</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Random Picker Modal -->
-    <div class="modal-overlay" id="modal-picker">
-        <div class="modal">
-            <button class="modal-close" onclick="closeModal('picker')">&times;</button>
-            <h3 class="modal-title">随机决定器</h3>
-            <textarea class="picker-input" id="pickerOptions" placeholder="输入选项，用逗号分隔&#10;例如：选项1, 选项2, 选项3"></textarea>
-            <div style="text-align: center;">
-                <button class="btn" onclick="pickerRoll()">随机选择</button>
-                <button class="btn btn-secondary" onclick="pickerClear()">清空</button>
-            </div>
-            <div class="picker-result" id="pickerResult">
-                <div class="picker-result-text" id="pickerResultText"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Game Modal -->
-    <div class="modal-overlay" id="modal-game">
-        <div class="modal" style="max-width: 800px;">
-            <button class="modal-close" onclick="closeModal('game')">&times;</button>
-            <h3 class="modal-title">忍者神龟</h3>
-            <div style="text-align: center; padding: 2rem;">
-                <div style="font-size: 4rem; margin-bottom: 1rem;">🐢</div>
-                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">经典街机游戏</p>
-                <p style="color: var(--text-secondary); margin-bottom: 2rem;">游戏文件位于本地，点击下方按钮启动游戏：</p>
-                <a href="file:///D:/QClawWorkspace/tmnt-game/index.html" target="_blank" class="btn">打开游戏</a>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // ===== Audio Context for UI sounds =====
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        
-        function playClickSound() {
-            try {
-                const oscillator = audioCtx.createOscillator();
-                const gainNode = audioCtx.createGain();
-                oscillator.connect(gainNode);
-                gainNode.connect(audioCtx.destination);
-                oscillator.frequency.value = 800;
-                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
-                oscillator.start(audioCtx.currentTime);
-                oscillator.stop(audioCtx.currentTime + 0.1);
-            } catch(e) {}
-        }
-
-        // ===== Router =====
-        function showPage(pageId) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-            
-            const page = document.getElementById('page-' + pageId);
-            if (page) {
-                page.classList.add('active');
-            }
-            
-            const navLink = document.querySelector(`.nav-links a[data-page="${pageId}"]`);
-            if (navLink) {
-                navLink.classList.add('active');
-            }
-            
-            // Update stats on home page
-            if (pageId === 'home') {
-                updateStats();
-            }
-        }
-
-        function handleHashChange() {
-            const hash = window.location.hash.slice(1) || 'home';
-            showPage(hash);
-        }
-
-        window.addEventListener('hashchange', handleHashChange);
-        
-        // Initial page load
-        if (window.location.hash) {
-            handleHashChange();
-        } else {
-            showPage('home');
-        }
-
-        // ===== Mobile Navigation =====
-        const hamburger = document.getElementById('hamburger');
-        const navLinks = document.getElementById('navLinks');
-
-        hamburger.addEventListener('click', () => {
-            hamburger.classList.toggle('active');
-            navLinks.classList.toggle('active');
-            playClickSound();
-        });
-
-        // Close mobile menu when clicking a link
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', () => {
-                hamburger.classList.remove('active');
-                navLinks.classList.remove('active');
-            });
-        });
-
-        // ===== Notes System =====
-        let notes = JSON.parse(localStorage.getItem('lihe-notes') || '[]');
-        let currentFilter = 'all';
-        let editingNoteId = null;
-
-        function saveNotes() {
-            localStorage.setItem('lihe-notes', JSON.stringify(notes));
-            renderNotes();
-            updateStats();
-        }
-
-        function updateStats() {
-            document.getElementById('stat-notes').textContent = notes.length;
-        }
-
-        function renderNotes() {
-            const grid = document.getElementById('notesGrid');
-            const searchTerm = document.getElementById('searchNotes').value.toLowerCase();
-            
-            let filteredNotes = notes.filter(note => {
-                const matchesFilter = currentFilter === 'all' || note.category === currentFilter;
-                const matchesSearch = note.content.toLowerCase().includes(searchTerm) || 
-                    note.tags.some(tag => tag.toLowerCase().includes(searchTerm));
-                return matchesFilter && matchesSearch;
-            });
-
-            if (filteredNotes.length === 0) {
-                grid.innerHTML = `
-                    <div class="empty-state" style="grid-column: 1 / -1;">
-                        <div class="empty-state-icon">✨</div>
-                        <div class="empty-state-text">还没有随笔，写下你的第一条想法吧 ✨</div>
-                    </div>
-                `;
-                return;
-            }
-
-            grid.innerHTML = filteredNotes.map(note => `
-                <div class="glass-card note-card" data-id="${note.id}">
-                    <span class="note-category ${getCategoryClass(note.category)}">${note.category}</span>
-                    <div class="note-content">${escapeHtml(note.content)}</div>
-                    ${note.tags.length > 0 ? `
-                        <div class="note-tags">
-                            ${note.tags.map(tag => `<span class="note-tag">${escapeHtml(tag)}</span>`).join('')}
-                        </div>
-                    ` : ''}
-                    <div class="note-meta">
-                        <span class="note-time">${formatDate(note.timestamp)}</span>
-                        <div class="note-actions">
-                            <button onclick="editNote(${note.id})" title="编辑">✏️</button>
-                            <button class="delete" onclick="deleteNote(${note.id})" title="删除">🗑️</button>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function getCategoryClass(category) {
-            const classes = {
-                '随笔': 'suiyi',
-                '思考': 'sikao',
-                '爱好': 'aihao',
-                '技术': 'jishu'
-            };
-            return classes[category] || 'suiyi';
-        }
-
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        function formatDate(timestamp) {
-            const date = new Date(timestamp);
-            return date.toLocaleDateString('zh-CN', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-        }
-
-        function addNote() {
-            const content = document.getElementById('noteContent').value.trim();
-            const category = document.getElementById('noteCategory').value;
-            const tagsInput = document.getElementById('noteTags').value.trim();
-            const tags = tagsInput ? tagsInput.split(',').map(t => t.trim()).filter(t => t) : [];
-
-            if (!content) {
-                alert('请输入随笔内容');
-                return;
-            }
-
-            if (editingNoteId) {
-                const noteIndex = notes.findIndex(n => n.id === editingNoteId);
-                if (noteIndex !== -1) {
-                    notes[noteIndex] = {
-                        ...notes[noteIndex],
-                        content,
-                        category,
-                        tags,
-                        timestamp: Date.now()
-                    };
-                }
-                editingNoteId = null;
-                document.getElementById('addNoteBtn').textContent = '发布随笔';
-            } else {
-                notes.unshift({
-                    id: Date.now(),
-                    content,
-                    category,
-                    tags,
-                    timestamp: Date.now()
-                });
-            }
-
-            document.getElementById('noteContent').value = '';
-            document.getElementById('noteTags').value = '';
-            document.getElementById('charCount').textContent = '0';
-            saveNotes();
-            playClickSound();
-        }
-
-        function editNote(id) {
-            const note = notes.find(n => n.id === id);
-            if (!note) return;
-
-            editingNoteId = id;
-            document.getElementById('noteContent').value = note.content;
-            document.getElementById('noteCategory').value = note.category;
-            document.getElementById('noteTags').value = note.tags.join(', ');
-            document.getElementById('charCount').textContent = note.content.length;
-            document.getElementById('addNoteBtn').textContent = '保存修改';
-            document.getElementById('noteContent').focus();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            playClickSound();
-        }
-
-        function deleteNote(id) {
-            if (confirm('确定要删除这条随笔吗？')) {
-                notes = notes.filter(n => n.id !== id);
-                saveNotes();
-                playClickSound();
-            }
-        }
-
-        // Event listeners for notes
-        document.getElementById('addNoteBtn').addEventListener('click', addNote);
-        
-        document.getElementById('noteContent').addEventListener('input', function() {
-            document.getElementById('charCount').textContent = this.value.length;
-        });
-
-        document.getElementById('searchNotes').addEventListener('input', renderNotes);
-
-        // Filter buttons
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                currentFilter = this.dataset.filter;
-                renderNotes();
-                playClickSound();
-            });
-        });
-
-        // ===== Modals =====
-        function openModal(modalId) {
-            document.getElementById('modal-' + modalId).classList.add('active');
-            playClickSound();
-        }
-
-        function closeModal(modalId) {
-            document.getElementById('modal-' + modalId).classList.remove('active');
-            playClickSound();
-        }
-
-        // Close modal on overlay click
-        document.querySelectorAll('.modal-overlay').forEach(overlay => {
-            overlay.addEventListener('click', function(e) {
-                if (e.target === this) {
-                    this.classList.remove('active');
-                }
-            });
-        });
-
-        // ===== Calculator =====
-        let calcValue = '0';
-        let calcOperatorValue = null;
-        let calcPreviousValue = null;
-        let calcShouldResetDisplay = false;
-
-        function calcUpdateDisplay() {
-            document.getElementById('calcDisplay').textContent = calcValue;
-        }
-
-        function calcNumber(num) {
-            if (calcShouldResetDisplay || calcValue === '0') {
-                calcValue = num;
-                calcShouldResetDisplay = false;
-            } else if (calcValue.length < 15) {
-                calcValue += num;
-            }
-            calcUpdateDisplay();
-            playClickSound();
-        }
-
-        function calcOperator(op) {
-            if (calcOperatorValue !== null && !calcShouldResetDisplay) {
-                calcEquals();
-            }
-            calcPreviousValue = calcValue;
-            calcOperatorValue = op;
-            calcShouldResetDisplay = true;
-            playClickSound();
-        }
-
-        function calcEquals() {
-            if (calcOperatorValue === null || calcPreviousValue === null) return;
-            
-            const prev = parseFloat(calcPreviousValue);
-            const curr = parseFloat(calcValue);
-            let result;
-
-            switch(calcOperatorValue) {
-                case '+': result = prev + curr; break;
-                case '-': result = prev - curr; break;
-                case '*': result = prev * curr; break;
-                case '/': result = curr !== 0 ? prev / curr : 'Error'; break;
-            }
-
-            calcValue = String(result);
-            calcOperatorValue = null;
-            calcPreviousValue = null;
-            calcShouldResetDisplay = true;
-            calcUpdateDisplay();
-            playClickSound();
-        }
-
-        function calcClear() {
-            calcValue = '0';
-            calcOperatorValue = null;
-            calcPreviousValue = null;
-            calcShouldResetDisplay = false;
-            calcUpdateDisplay();
-            playClickSound();
-        }
-
-        function calcBackspace() {
-            if (calcShouldResetDisplay) return;
-            calcValue = calcValue.length > 1 ? calcValue.slice(0, -1) : '0';
-            calcUpdateDisplay();
-            playClickSound();
-        }
-
-        // Keyboard support for calculator
-        document.addEventListener('keydown', function(e) {
-            const activeModal = document.querySelector('.modal-overlay.active');
-            if (!activeModal || activeModal.id !== 'modal-calculator') return;
-            
-            if (e.key >= '0' && e.key <= '9') calcNumber(e.key);
-            else if (e.key === '.') calcNumber('.');
-            else if (e.key === '+') calcOperator('+');
-            else if (e.key === '-') calcOperator('-');
-            else if (e.key === '*') calcOperator('*');
-            else if (e.key === '/') calcOperator('/');
-            else if (e.key === 'Enter' || e.key === '=') calcEquals();
-            else if (e.key === 'Escape') calcClear();
-            else if (e.key === 'Backspace') calcBackspace();
-        });
-
-        // ===== Countdown Timer =====
-        let countdownInterval = null;
-        let countdownRemaining = 0;
-        let countdownRunning = false;
-
-        function countdownUpdateDisplay() {
-            const hours = Math.floor(countdownRemaining / 3600);
-            const minutes = Math.floor((countdownRemaining % 3600) / 60);
-            const seconds = countdownRemaining % 60;
-            document.getElementById('countdownDisplay').textContent = 
-                String(hours).padStart(2, '0') + ':' +
-                String(minutes).padStart(2, '0') + ':' +
-                String(seconds).padStart(2, '0');
-        }
-
-        function countdownStart() {
-            if (countdownRunning) return;
-            
-            if (countdownRemaining === 0) {
-                const hours = parseInt(document.getElementById('countHours').value) || 0;
-                const minutes = parseInt(document.getElementById('countMinutes').value) || 0;
-                const seconds = parseInt(document.getElementById('countSeconds').value) || 0;
-                countdownRemaining = hours * 3600 + minutes * 60 + seconds;
-            }
-            
-            if (countdownRemaining <= 0) return;
-            
-            countdownRunning = true;
-            document.getElementById('countStartBtn').textContent = '运行中...';
-            document.getElementById('countStartBtn').disabled = true;
-            
-            countdownInterval = setInterval(() => {
-                countdownRemaining--;
-                countdownUpdateDisplay();
-                
-                if (countdownRemaining <= 0) {
-                    countdownPause();
-                    countdownAlarm();
-                }
-            }, 1000);
-            playClickSound();
-        }
-
-        function countdownPause() {
-            if (!countdownRunning) return;
-            
-            clearInterval(countdownInterval);
-            countdownRunning = false;
-            document.getElementById('countStartBtn').textContent = '继续';
-            document.getElementById('countStartBtn').disabled = false;
-            playClickSound();
-        }
-
-        function countdownReset() {
-            countdownPause();
-            countdownRemaining = 0;
-            document.getElementById('countHours').value = '0';
-            document.getElementById('countMinutes').value = '0';
-            document.getElementById('countSeconds').value = '0';
-            countdownUpdateDisplay();
-            playClickSound();
-        }
-
-        function countdownAlarm() {
-            // Play alarm sound
-            try {
-                for (let i = 0; i < 3; i++) {
-                    setTimeout(() => {
-                        const osc = audioCtx.createOscillator();
-                        const gain = audioCtx.createGain();
-                        osc.connect(gain);
-                        gain.connect(audioCtx.destination);
-                        osc.frequency.value = 880;
-                        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-                        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
-                        osc.start(audioCtx.currentTime);
-                        osc.stop(audioCtx.currentTime + 0.5);
-                    }, i * 600);
-                }
-            } catch(e) {}
-            alert('倒计时结束！');
-        }
-
-        // ===== Random Picker =====
-        function pickerRoll() {
-            const input = document.getElementById('pickerOptions').value.trim();
-            if (!input) {
-                alert('请输入选项');
-                return;
-            }
-
-            const options = input.split(',').map(s => s.trim()).filter(s => s);
-            if (options.length < 2) {
-                alert('请至少输入2个选项');
-                return;
-            }
-
-            const resultText = document.getElementById('pickerResultText');
-            const resultDiv = document.getElementById('pickerResult');
-            
-            // Animation effect
-            let iterations = 0;
-            const maxIterations = 20;
-            const interval = setInterval(() => {
-                resultText.textContent = options[Math.floor(Math.random() * options.length)];
-                iterations++;
-                if (iterations >= maxIterations) {
-                    clearInterval(interval);
-                    // Final result
-                    const finalChoice = options[Math.floor(Math.random() * options.length)];
-                    resultText.textContent = finalChoice;
-                    resultDiv.classList.add('show');
-                    playClickSound();
-                }
-            }, 100);
-        }
-
-        function pickerClear() {
-            document.getElementById('pickerOptions').value = '';
-            document.getElementById('pickerResult').classList.remove('show');
-            playClickSound();
-        }
-
-        // ===== Game Modal =====
-        function openGameModal() {
-            openModal('game');
-        }
-
-        // ===== Initialize =====
-        renderNotes();
-        updateStats();
-    </script>
+<nav>
+<div class="nav-logo">Lihe</div>
+<ul class="nav-links">
+<li><a href="#home" class="active" data-page="home">首页</a></li>
+<li><a href="#notes" data-page="notes">随笔</a></li>
+<li><a href="#games" data-page="games">游戏</a></li>
+<li><a href="#tools" data-page="tools">工具</a></li>
+<li><a href="#about" data-page="about">关于</a></li>
+</ul>
+</nav>
+<main>
+<div class="page active" id="page-home">
+<div class="hero">
+<h1 class="hero-name">Lihe</h1>
+<p style="font-size:1.3rem;color:var(--s);margin-top:1rem">创作者 · 思考者 · 开发者</p>
+<div class="hero-stats">
+<div class="stat-item"><div class="stat-number" id="stat-notes">0</div><div class="stat-label">随笔</div></div>
+<div class="stat-item"><div class="stat-number">2</div><div class="stat-label">游戏</div></div>
+<div class="stat-item"><div class="stat-number">3</div><div class="stat-label">工具</div></div>
+</div>
+</div>
+</div>
+<div class="page" id="page-notes">
+<h2 style="font-size:2rem;margin-bottom:2rem">随笔</h2>
+<div style="display:flex;gap:0.5rem;margin-bottom:1.5rem">
+<button class="filter-btn active" data-filter="all">全部</button>
+<button class="filter-btn" data-filter="随笔">随笔</button>
+<button class="filter-btn" data-filter="思考">思考</button>
+</div>
+<div class="glass-card" style="margin-bottom:2rem">
+<textarea class="form-textarea" id="noteContent" placeholder="写下你的想法..."></textarea>
+<div style="display:flex;gap:1rem;flex-wrap:wrap">
+<select class="form-select" id="noteCategory"><option value="随笔">随笔</option><option value="思考">思考</option></select>
+<button class="btn" onclick="addNote()">发布</button>
+</div>
+</div>
+<div class="notes-grid" id="notesGrid"></div>
+</div>
+<div class="page" id="page-games">
+<h2 style="font-size:2rem;margin-bottom:2rem">游戏</h2>
+<div class="games-grid">
+<div class="glass-card game-card" onclick="openTmntGame()"><div class="game-icon">🐢</div><h3>忍者神龟</h3><p style="color:var(--s);margin:1rem 0">经典街机游戏</p><button class="btn">开始游戏</button></div>
+<div class="glass-card game-card" onclick="openSnakeGame()"><div class="game-icon">🐍</div><h3>贪吃蛇</h3><p style="color:var(--s);margin:1rem 0">经典贪吃蛇</p><button class="btn">开始游戏</button></div>
+</div>
+</div>
+<div class="page" id="page-tools">
+<h2 style="font-size:2rem;margin-bottom:2rem">工具</h2>
+<div class="tools-grid">
+<div class="glass-card" onclick="openModal('calculator')"><div class="game-icon">🧮</div><h3>计算器</h3></div>
+<div class="glass-card" onclick="openModal('countdown')"><div class="game-icon">⏱️</div><h3>倒计时</h3></div>
+</div>
+</div>
+<div class="page" id="page-about">
+<h2 style="font-size:2rem;margin-bottom:2rem">关于</h2>
+<div class="glass-card"><p style="color:var(--s)">Lihe的个人空间</p></div>
+</div>
+</main>
+<div class="modal-overlay" id="modal-tmnt">
+<div class="modal modal-large">
+<button class="modal-close" onclick="closeTmntGame()">×</button>
+<h3 style="margin-bottom:1rem">忍者神龟</h3>
+<canvas id="tmntCanvas" width="640" height="400"></canvas>
+<div style="padding:8px;background:#0d081a;font-size:11px;color:#8070a0;text-align:center">方向键移动 W跳跃 X攻击</div>
+</div>
+</div>
+<div class="modal-overlay" id="modal-snake">
+<div class="modal">
+<button class="modal-close" onclick="closeSnakeGame()">×</button>
+<h3 style="margin-bottom:1rem">贪吃蛇</h3>
+<div class="snake-game-container">
+<div class="snake-header"><span class="snake-score">得分: <span id="snakeScore">0</span></span><span class="snake-high-score">最高: <span id="snakeHighScore">0</span></span></div>
+<canvas id="snakeCanvas" width="400" height="400"></canvas>
+<div class="snake-game-over" id="snakeGameOver"><h3>游戏结束!</h3><p>得分: <span id="finalScore">0</span></p><button class="btn" onclick="restartSnake()">重新开始</button></div>
+<div style="margin-top:15px;color:var(--s)">方向键或WASD控制</div>
+</div>
+</div>
+</div>
+<div class="modal-overlay" id="modal-calculator">
+<div class="modal">
+<button class="modal-close" onclick="closeModal('calculator')">×</button>
+<h3 style="margin-bottom:1rem">计算器</h3>
+<div class="calculator">
+<div class="calc-display" id="calcDisplay">0</div>
+<button class="calc-btn" onclick="calcClear()">C</button>
+<button class="calc-btn" onclick="calcOp('/')">÷</button>
+<button class="calc-btn" onclick="calcOp('*')">×</button>
+<button class="calc-btn" onclick="calcNum('7')">7</button>
+<button class="calc-btn" onclick="calcNum('8')">8</button>
+<button class="calc-btn" onclick="calcNum('9')">9</button>
+<button class="calc-btn" onclick="calcOp('-')">-</button>
+<button class="calc-btn" onclick="calcNum('4')">4</button>
+<button class="calc-btn" onclick="calcNum('5')">5</button>
+<button class="calc-btn" onclick="calcNum('6')">6</button>
+<button class="calc-btn" onclick="calcOp('+')">+</button>
+<button class="calc-btn" onclick="calcNum('1')">1</button>
+<button class="calc-btn" onclick="calcNum('2')">2</button>
+<button class="calc-btn" onclick="calcNum('3')">3</button>
+<button class="calc-btn equals" onclick="calcEq()" style="grid-row:span 2">=</button>
+<button class="calc-btn" onclick="calcNum('0')" style="grid-column:span 2">0</button>
+<button class="calc-btn" onclick="calcNum('.')">.</button>
+</div>
+</div>
+</div>
+<div class="modal-overlay" id="modal-countdown">
+<div class="modal">
+<button class="modal-close" onclick="closeModal('countdown')">×</button>
+<h3 style="margin-bottom:1rem">倒计时</h3>
+<div class="countdown-display" id="countDisplay">00:00:00</div>
+<div class="countdown-inputs">
+<div class="countdown-input-group"><label>时</label><input type="number" id="countH" min="0" max="99" value="0"></div>
+<div class="countdown-input-group"><label>分</label><input type="number" id="countM" min="0" max="59" value="0"></div>
+<div class="countdown-input-group"><label>秒</label><input type="number" id="countS" min="0" max="59" value="0"></div>
+</div>
+<div class="countdown-btns">
+<button class="btn" onclick="countStart()">开始</button>
+<button class="btn" onclick="countReset()" style="background:var(--c);color:var(--t)">重置</button>
+</div>
+</div>
+</div>
+<script>
+var audioCtx=new(window.AudioContext||window.webkitAudioContext);
+function playSound(freq,dur,type,v){try{var o=audioCtx.createOscillator(),g=audioCtx.createGain();o.connect(g);g.connect(audioCtx.destination);o.type=type||'square';o.frequency.value=freq;g.gain.setValueAtTime(v||0.1,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+dur);o.start();o.stop(audioCtx.currentTime+dur)}catch(e){}}
+function playEat(){playSound(600,0.1,'square',0.15)}
+function playGameOver(){playSound(200,0.5,'sawtooth',0.2)}
+var notes=JSON.parse(localStorage.getItem('lihe-notes')||'[]');
+var preloadedId='why-start-2026';
+if(notes.length===0||!notes.some(function(n){return n.id===preloadedId})){
+notes.unshift({id:preloadedId,category:'随笔',tags:['开始','记录','成长'],title:'为什么开始',content:"有时候，开始一件事不需要理由。\n\n但如果非要说一个，那大概是——我想留下点什么。\n\n不是给别人看的，是给未来的自己看的。某一天翻回来，看看那时候在想什么，在做什么，在乎什么。那种感觉，比任何相册都真实。\n\n这个小站就是这样来的。没有宏大的计划，没有精心的设计路线图。就是某天突然觉得：我应该有个地方，能放我自己的东西。\n\n游戏是我做的，工具是我需要的，随笔是我想说的。慢慢来，慢慢填。\n\n也许以后会有人路过，也许不会。但这里首先是我自己的地方。\n\n——Lihe，2026年3月25日",timestamp:'2026-03-25T07:18:00.000Z'});
+localStorage.setItem('lihe-notes',JSON.stringify(notes))}
+function saveNotes(){localStorage.setItem('lihe-notes',JSON.stringify(notes));renderNotes();document.getElementById('stat-notes').textContent=notes.length}
+function renderNotes(){var grid=document.getElementById('notesGrid');if(notes.length===0){grid.innerHTML='<div style="text-align:center;padding:4rem;color:var(--s)">还没有随笔</div>';return}grid.innerHTML=notes.map(function(n){return'<div class="note-card"><span class="note-category '+getCatClass(n.category)+'">'+n.category+'</span><div class="note-content">'+escapeHtml(n.content)+'</div><div class="note-meta"><span class="note-time">'+new Date(n.timestamp).toLocaleDateString('zh-CN')+'</span></div></div>'}).join('')}
+function getCatClass(c){return c==='随笔'?'suiyi':'sikao'}
+function escapeHtml(t){var d=document.createElement('div');d.textContent=t;return d.innerHTML}
+function addNote(){var content=document.getElementById('noteContent').value.trim();var category=document.getElementById('noteCategory').value;if(!content)return;notes.unshift({id:Date.now(),content:content,category:category,timestamp:Date.now()});document.getElementById('noteContent').value='';saveNotes()}
+document.querySelectorAll('.filter-btn').forEach(function(btn){btn.addEventListener('click',function(){document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active')});this.classList.add('active')})});
+function showPage(id){document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});document.querySelectorAll('.nav-links a').forEach(function(a){a.classList.remove('active')});document.getElementById('page-'+id).classList.add('active');var na=document.querySelector('.nav-links a[data-page="'+id+'"]');if(na)na.classList.add('active')}
+window.addEventListener('hashchange',function(){showPage(window.location.hash.slice(1)||'home')});
+showPage(window.location.hash.slice(1)||'home');
+document.querySelectorAll('.nav-links a').forEach(function(a){a.addEventListener('click',function(){showPage(this.dataset.page)})});
+function openModal(id){document.getElementById('modal-'+id).classList.add('active')}
+function closeModal(id){document.getElementById('modal-'+id).classList.remove('active')}
+document.querySelectorAll('.modal-overlay').forEach(function(o){o.addEventListener('click',function(e){if(e.target===this)this.classList.remove('active')})});
+var calcVal='0',calcOp2=null,calcPrev=null;
+function calcNum(n){if(calcVal==='0')calcVal=n;else calcVal+=n;document.getElementById('calcDisplay').textContent=calcVal}
+function calcOp(op){if(calcOp2)calcEq();calcPrev=calcVal;calcOp2=op;calcVal='0'}
+function calcEq(){if(calcOp2===null)return;var p=parseFloat(calcPrev),c=parseFloat(calcVal),r;switch(calcOp2){case'+':r=p+c;break;case'-':r=p-c;break;case'*':r=p*c;break;case'/':r=c!==0?p/c:'Error';break}calcVal=String(r);calcOp2=null;calcPrev=null;document.getElementById('calcDisplay').textContent=calcVal}
+function calcClear(){calcVal='0';calcOp2=null;calcPrev=null;document.getElementById('calcDisplay').textContent='0'}
+var countInterval=null,countRemaining=0;
+function countUpdateDisplay(){var h=Math.floor(countRemaining/3600),m=Math.floor((countRemaining%3600)/60),s=countRemaining%60;document.getElementById('countDisplay').textContent=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')}
+function countStart(){if(countInterval)return;if(countRemaining===0){countRemaining=(parseInt(document.getElementById('countH').value)||0)*3600+(parseInt(document.getElementById('countM').value)||0)*60+(parseInt(document.getElementById('countS').value)||0)}if(countRemaining<=0)return;countInterval=setInterval(function(){countRemaining--;countUpdateDisplay();if(countRemaining<=0){clearInterval(countInterval);countInterval=null;alert('倒计时结束!')}},1000)}
+function countReset(){if(countInterval){clearInterval(countInterval);countInterval=null}countRemaining=0;document.getElementById('countH').value='0';document.getElementById('countM').value='0';document.getElementById('countS').value='0';countUpdateDisplay()}
+var tmntRAF=null;
+function openTmntGame(){document.getElementById('modal-tmnt').classList.add('active');initTmntGame()}
+function closeTmntGame(){document.getElementById('modal-tmnt').classList.remove('active');if(tmntRAF){cancelAnimationFrame(tmntRAF);tmntRAF=null}}
+function initTmntGame(){var CV=document.getElementById('tmntCanvas');var CX=CV.getContext('2d');var CW=640,CH=400,GY=CH-60;var score=0,lives=3,hp=3;var ks={};var p={x:60,y:300,w:28,h:38,vx:0,vy:0,g:false,f:1,hp:3,inv:0};var ens=[];var blls=[];var LD={pf:[[120,280,100,14],[320,240,120,14],[520,290,90,14],[720,250,100,14]],bg:'#0d0a1a',lw:850};ens=[{t:'s',x:200,y:300,vx:1.5,w:24,h:36,hp:1},{t:'s',x:450,y:300,vx:-1.5,w:24,h:36,hp:1},{t:'m',x:600,y:300,vx:1,w:22,h:22,hp:2}];function DL(){CX.fillStyle=LD.bg;CX.fillRect(0,0,CW,CH);CX.fillStyle='#3a3';for(var i=0;i<LD.pf.length;i++){var pf=LD.pf[i];CX.fillRect(pf[0],pf[2],pf[1],pf[3])}CX.fillStyle='#0a0';CX.fillRect(0,GY,CW,CH-GY)}
+function DG(){CX.fillStyle='#2c4';CX.fillRect(p.x,p.y,p.w,p.h);CX.fillStyle='#111';CX.beginPath();CX.arc(p.x+8,p.y+8,3,0,Math.PI*2);CX.arc(p.x+18,p.y+8,3,0,Math.PI*2);CX.fill()}
+function DE(e){if(e.t==='s'){CX.fillStyle='#c33';CX.fillRect(e.x,e.y,e.w,e.h);CX.fillStyle='#fff';CX.fillRect(e.x+4,e.y+8,4,4);CX.fillRect(e.x+14,e.y+8,4,4)}else{CX.fillStyle='#888';CX.beginPath();CX.arc(e.x+e.w/2,e.y+e.h/2,e.w/2,0,Math.PI*2);CX.fill()}}
+function UP(){if(ks.ArrowLeft||ks.KeyA){p.vx=-3;p.f=-1}else if(ks.ArrowRight||ks.KeyD){p.vx=3;p.f=1}else p.vx*=0.8;if((ks.ArrowUp||ks.KeyW||ks.Space)&&p.g){p.vy=-9;p.g=false}p.vy+=0.4;var ny=p.y+p.vy;if(ny+p.h>=GY){ny=GY-p.h;p.vy=0;p.g=true}for(var i=0;i<LD.pf.length;i++){var pf=LD.pf[i];if(p.x+p.w>pf[0]&&p.x<pf[0]+pf[1]&&p.y+p.h<=pf[2]+4){ny=pf[2]-p.h;p.vy=0;p.g=true}}p.x+=p.vx;if(p.x<0)p.x=0;if(p.x+p.w>LD.lw)p.x=LD.lw-p.w;p.y=ny;if(ks.KeyX){blls.push({x:p.x+p.w/2+p.f*16,y:p.y+p.h/2-4,vx:p.f*7});ks.KeyX=false}for(var i=ens.length-1;i>=0;i--){var e=ens[i];e.x+=e.vx;if(e.x<20||e.x+e.w>LD.lw-20)e.vx*=-1;if(p.inv===0&&Math.abs(p.x-e.x)<20&&Math.abs(p.y-e.y)<30){hp--;p.inv=60;if(hp<=0){lives--;hp=3;p.x=60;p.y=300}}}for(var i=blls.length-1;i>=0;i--){var b=blls[i];b.x+=b.vx;for(var j=ens.length-1;j>=0;j--){var e=ens[j];if(Math.abs(b.x-e.x)<e.w/2&&Math.abs(b.y-e.y)<e.h/2){e.hp--;blls.splice(i,1);if(e.hp<=0){score+=e.t==='m'?50:30;ens.splice(j,1)}}}}}
+function gameLoop(){DL();for(var i=0;i<ens.length;i++)DE(ens[i]);for(var i=0;i<blls.length;i++){CX.fillStyle='#ff0';CX.fillRect(blls[i].x,blls[i].y,6,4)}DG();UP();document.getElementById('tmntScore').textContent=score;document.getElementById('tmntLives').textContent=lives;document.getElementById('tmntHp').textContent=hp;tmntRAF=requestAnimationFrame(gameLoop)}
+document.addEventListener('keydown',function(e){ks[e.code]=true});
+document.addEventListener('keyup',function(e){ks[e.code]=false});
+gameLoop()}
+var snakeRunning=false;var snakeRAF=null;var snakeHighScore=parseInt(localStorage.getItem('snakeHighScore')||'0');
+function openSnakeGame(){document.getElementById('modal-snake').classList.add('active');document.getElementById('snakeHighScore').textContent=snakeHighScore;initSnakeGame()}
+function closeSnakeGame(){document.getElementById('modal-snake').classList.remove('active');document.getElementById('snakeGameOver').classList.remove('show');if(snakeRAF){cancelAnimationFrame(snakeRAF);snakeRAF=null}snakeRunning=false}
+function initSnakeGame(){var CV=document.getElementById('snakeCanvas');var CX=CV.getContext('2d');var W=400,H=400,GRID=20;var snake=[{x:10,y:10}],food={x:15,y:15},dir={x:1,y:0},nextDir={x:1,y:0},score=0,speed=150,gameOver=false;document.getElementById('snakeScore').textContent='0';document.getElementById('snakeGameOver').classList.remove('show');function draw(){CX.fillStyle='#0a0a0f';CX.fillRect(0,0,W,H);CX.strokeStyle='rgba(0,255,136,0.1)';for(var x=0;x<=W;x+=GRID)CX.beginPath(),CX.moveTo(x,0),CX.lineTo(x,H),CX.stroke();for(var y=0;y<=H;y+=GRID)CX.beginPath(),CX.moveTo(0,y),CX.lineTo(W,y),CX.stroke();CX.fillStyle='#f00';CX.beginPath();CX.arc(food.x*GRID+GRID/2,food.y*GRID+GRID/2,GRID/2-2,0,Math.PI*2);CX.fill();CX.fillStyle='#00ff88';for(var i=0;i<snake.length;i++){CX.fillRect(snake[i].x*GRID,snake[i].y*GRID,GRID-2,GRID-2)}}
+function update(){if(gameOver)return;dir=nextDir;var head={x:snake[0].x+dir.x,y:snake[0].y+dir.y};if(head.x<0||head.x>=W/GRID||head.y<0||head.y>=H/GRID||snake.some(function(s){return s.x===head.x&&s.y===head.y})){gameOver=true;playGameOver();if(score>snakeHighScore){snakeHighScore=score;localStorage.setItem('snakeHighScore',snakeHighScore);document.getElementById('snakeHighScore').textContent=snakeHighScore}document.getElementById('finalScore').textContent=score;document.getElementById('snakeGameOver').classList.add('show');return}snake.unshift(head);if(head.x===food.x&&head.y===food.y){score+=10;document.getElementById('snakeScore').textContent=score;playEat();food={x:Math.floor(Math.random()*(W/GRID)),y:Math.floor(Math.random()*(H/GRID))};if(speed>50)speed-=2}else{snake.pop()}}
+function loop(){update();draw();snakeRAF=requestAnimationFrame(loop)}
+document.addEventListener('keydown',function(e){var key=e.key.toLowerCase();if(key==='arrowup'||key==='w')nextDir={x:0,y:-1};else if(key==='arrowdown'||key==='s')nextDir={x:0,y:1};else if(key==='arrowleft'||key==='a')nextDir={x:-1,y:0};else if(key==='arrowright'||key==='d')nextDir={x:1,y:0}});
+loop()}
+function restartSnake(){document.getElementById('snakeGameOver').classList.remove('show');initSnakeGame()}
+renderNotes();document.getElementById('stat-notes').textContent=notes.length;
+</script>
 </body>
 </html>
