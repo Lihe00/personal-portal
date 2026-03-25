@@ -40,10 +40,15 @@ main{padding-top:80px;min-height:100vh}
 .snake-high-score{color:var(--p)}
 .snake-game-over{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.9);padding:2rem;border-radius:12px;text-align:center;display:none;border:2px solid var(--g)}
 .snake-game-over.show{display:block}
-.calculator{display:grid;grid-template-columns:repeat(4,1fr);gap:0.75rem}
-.calc-display{grid-column:span 4;background:var(--c);border:1px solid var(--b);border-radius:12px;padding:1rem;text-align:right;font-size:1.5rem;min-height:60px}
-.calc-btn{background:var(--c);border:1px solid var(--b);border-radius:12px;padding:1rem;font-size:1.25rem;color:var(--t);cursor:pointer}
-.calc-btn.equals{background:var(--g);color:var(--d)}
+.calculator{display:grid;grid-template-columns:repeat(5,1fr);gap:0.5rem}
+.calc-display{grid-column:span 5;background:rgba(0,255,136,0.08);border:1px solid rgba(0,255,136,0.3);border-radius:12px;padding:1rem 1.25rem;text-align:right;font-size:1.6rem;min-height:64px;word-break:break-all;margin-bottom:0.5rem}
+.calc-btn{background:var(--c);border:1px solid var(--b);border-radius:10px;padding:0.85rem 0.5rem;font-size:1.1rem;color:var(--t);cursor:pointer;transition:all 0.15s}
+.calc-btn:hover{background:var(--h);border-color:var(--g)}
+.calc-btn.op{color:var(--g);border-color:rgba(0,255,136,0.3)}
+.calc-btn.func{color:var(--p);border-color:rgba(136,0,255,0.3);font-size:0.95rem}
+.calc-btn.equals{background:var(--g);color:var(--d);font-weight:700}
+.calc-btn.clear{color:#ff6b6b;border-color:rgba(255,107,107,0.3)}
+.calc-btn.span2{grid-column:span 2}
 .notes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem}
 .note-card{background:var(--c);border:1px solid var(--b);border-radius:16px;padding:1.5rem}
 .note-category{display:inline-block;padding:0.25rem 0.75rem;border-radius:20px;font-size:0.8rem}
@@ -146,26 +151,38 @@ main{padding-top:80px;min-height:100vh}
 <div class="modal-overlay" id="modal-calculator">
 <div class="modal">
 <button class="modal-close" onclick="closeModal('calculator')">×</button>
-<h3 style="margin-bottom:1rem">计算器</h3>
+<h3 style="margin-bottom:1rem">科学计算器</h3>
 <div class="calculator">
 <div class="calc-display" id="calcDisplay">0</div>
-<button class="calc-btn" onclick="calcClear()">C</button>
-<button class="calc-btn" onclick="calcOp('/')">÷</button>
-<button class="calc-btn" onclick="calcOp('*')">×</button>
+<button class="calc-btn clear" onclick="calcClear()">C</button>
+<button class="calc-btn func" onclick="calcFunc('sqrt')">√</button>
+<button class="calc-btn func" onclick="calcFunc('pow2')">x²</button>
+<button class="calc-btn func" onclick="calcFunc('pow3')">x³</button>
+<button class="calc-btn op" onclick="calcOp('/')">÷</button>
 <button class="calc-btn" onclick="calcNum('7')">7</button>
 <button class="calc-btn" onclick="calcNum('8')">8</button>
 <button class="calc-btn" onclick="calcNum('9')">9</button>
-<button class="calc-btn" onclick="calcOp('-')">-</button>
+<button class="calc-btn op" onclick="calcOp('*')">×</button>
+<button class="calc-btn func" onclick="calcFunc('sin')">sin</button>
 <button class="calc-btn" onclick="calcNum('4')">4</button>
 <button class="calc-btn" onclick="calcNum('5')">5</button>
 <button class="calc-btn" onclick="calcNum('6')">6</button>
-<button class="calc-btn" onclick="calcOp('+')">+</button>
+<button class="calc-btn op" onclick="calcOp('-')">-</button>
+<button class="calc-btn func" onclick="calcFunc('cos')">cos</button>
 <button class="calc-btn" onclick="calcNum('1')">1</button>
 <button class="calc-btn" onclick="calcNum('2')">2</button>
 <button class="calc-btn" onclick="calcNum('3')">3</button>
-<button class="calc-btn equals" onclick="calcEq()" style="grid-row:span 2">=</button>
+<button class="calc-btn op" onclick="calcOp('+')">+</button>
+<button class="calc-btn func" onclick="calcFunc('tan')">tan</button>
 <button class="calc-btn" onclick="calcNum('0')" style="grid-column:span 2">0</button>
 <button class="calc-btn" onclick="calcNum('.')">.</button>
+<button class="calc-btn func" onclick="calcFunc('log')">log</button>
+<button class="calc-btn equals" onclick="calcEq()" style="grid-column:span 2">=</button>
+<button class="calc-btn func" onclick="calcFunc('ln')">ln</button>
+<button class="calc-btn func" onclick="calcFunc('pi')">π</button>
+<button class="calc-btn func" onclick="calcFunc('e')">e</button>
+<button class="calc-btn func" onclick="calcFunc('fact')">n!</button>
+<button class="calc-btn func" onclick="calcFunc('inv')">1/x</button>
 </div>
 </div>
 </div>
@@ -208,11 +225,14 @@ document.querySelectorAll('.nav-links a').forEach(function(a){a.addEventListener
 function openModal(id){document.getElementById('modal-'+id).classList.add('active')}
 function closeModal(id){document.getElementById('modal-'+id).classList.remove('active')}
 document.querySelectorAll('.modal-overlay').forEach(function(o){o.addEventListener('click',function(e){if(e.target===this)this.classList.remove('active')})});
-var calcVal='0',calcOp2=null,calcPrev=null;
-function calcNum(n){if(calcVal==='0')calcVal=n;else calcVal+=n;document.getElementById('calcDisplay').textContent=calcVal}
-function calcOp(op){if(calcOp2)calcEq();calcPrev=calcVal;calcOp2=op;calcVal='0'}
-function calcEq(){if(calcOp2===null)return;var p=parseFloat(calcPrev),c=parseFloat(calcVal),r;switch(calcOp2){case'+':r=p+c;break;case'-':r=p-c;break;case'*':r=p*c;break;case'/':r=c!==0?p/c:'Error';break}calcVal=String(r);calcOp2=null;calcPrev=null;document.getElementById('calcDisplay').textContent=calcVal}
-function calcClear(){calcVal='0';calcOp2=null;calcPrev=null;document.getElementById('calcDisplay').textContent='0'}
+var calcVal='0',calcOp2=null,calcPrev=null,calcFunc=null;
+function calcNum(n){if(calcVal==='0'&&n!=='.')calcVal=n;else calcVal+=n;document.getElementById('calcDisplay').textContent=calcVal}
+function calcOp(op){if(calcOp2&&!calcFunc)calcEq();calcPrev=calcVal;calcOp2=op;calcFunc=null}
+function calcEq(){if(calcOp2===null)return;var p=parseFloat(calcPrev),c=parseFloat(calcVal),r;switch(calcOp2){case'+':r=p+c;break;case'-':r=p-c;break;case'*':r=p*c;break;case'/':r=c!==0?p/c:'Error';break}calcVal=String(r);if(calcVal==='NaN')calcVal='Error';calcOp2=null;calcPrev=null;calcFunc=null;document.getElementById('calcDisplay').textContent=calcVal}
+function calcFunc(fn){var v=parseFloat(calcVal),r;switch(fn){case'sqrt':r=v>=0?Math.sqrt(v):'Error';break;case'pow2':r=v*v;break;case'pow3':r=v*v*v;break;case'sin':r=Math.sin(v*Math.PI/180);break;case'cos':r=Math.cos(v*Math.PI/180);break;case'tan':r=Math.tan(v*Math.PI/180);break;case'log':r=v>0?Math.log10(v):'Error';break;case'ln':r=v>0?Math.log(v):'Error';break;case'fact':r=(v>=0&&Number.isInteger(v)&&v<=170)?fact(v):'Error';break;case'inv':r=v!==0?1/v:'Error';break;case'pi':calcVal='0';document.getElementById('calcDisplay').textContent=Math.PI;return;case'e':calcVal='0';document.getElementById('calcDisplay').textContent=Math.E;return}if(r==='Error'){calcVal='0'}else{r=Math.round(r*1e12)/1e12;calcVal=String(r)}document.getElementById('calcDisplay').textContent=calcVal}
+function fact(n){if(n===0||n===1)return 1;return n*fact(n-1)}
+function calcClear(){calcVal='0';calcOp2=null;calcPrev=null;calcFunc=null;document.getElementById('calcDisplay').textContent='0'}
+document.addEventListener('keydown',function(e){var k=e.key;if(k>='0'&&k<='9')calcNum(k);else if(k==='.')calcNum('.');else if(k==='+'||k==='-'||k==='*'||k==='/')calcOp(k);else if(k==='Enter'||k==='=')calcEq();else if(k==='Escape'||k==='c'||k==='C')calcClear()});
 var countInterval=null,countRemaining=0;
 function countUpdateDisplay(){var h=Math.floor(countRemaining/3600),m=Math.floor((countRemaining%3600)/60),s=countRemaining%60;document.getElementById('countDisplay').textContent=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')}
 function countStart(){if(countInterval)return;if(countRemaining===0){countRemaining=(parseInt(document.getElementById('countH').value)||0)*3600+(parseInt(document.getElementById('countM').value)||0)*60+(parseInt(document.getElementById('countS').value)||0)}if(countRemaining<=0)return;countInterval=setInterval(function(){countRemaining--;countUpdateDisplay();if(countRemaining<=0){clearInterval(countInterval);countInterval=null;alert('倒计时结束!')}},1000)}
